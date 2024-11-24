@@ -1,0 +1,38 @@
+import 'package:html/dom.dart';
+import 'package:http/http.dart' as http;
+import 'package:html/parser.dart' show parse;
+
+  Future<List<String>> getListOfUrls(String topLevelUrl) async {
+    var headersMap = {
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+      "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+      "Accept-Language": "en-US,en;q=0.5",
+      "Accept-Encoding": "gzip, deflate, br",
+      "Connection": "keep-alive",
+      "Upgrade-Insecure-Requests": "1",
+      "Cache-Control": "no-cache",
+      "Pragma": "no-cache",
+      "Referer": "https://www.rightmove.co.uk/",  
+    };
+    final response = await http.get(Uri.parse(topLevelUrl), headers: headersMap);
+    
+    if (response.statusCode == 200) {
+      final document = parse(response.body);
+
+      // Extract all links with the class "propertyCard-link"
+      List<Element> linkElements = document.querySelectorAll('a.propertyCard-link');
+
+      // Extract the href attribute and prepend the base URL
+      String baseUrl = "https://www.rightmove.co.uk";
+      List<String> propertyLinks = linkElements
+          .map((element) => element.attributes['href'] != null
+              ? '$baseUrl${element.attributes['href']}'
+              : null)
+          .where((link) => link != null) // Remove nulls
+          .cast<String>() // Ensure the type is String
+          .toList();
+
+      return propertyLinks;
+      }
+    return List.empty();
+  }
