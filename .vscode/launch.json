@@ -8,7 +8,7 @@
             "name": "my_flutter_application",
             "request": "launch",
             "type": "dart",
-            "program": "bin/homeScreen.dart",
+            "program": "bin/main.dart",
         },
         {
             "name": "my_flutter_application (profile mode)",

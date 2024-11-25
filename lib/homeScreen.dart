@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_application/listViewScreen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:my_flutter_application/firebase_options.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
-void main() async {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     theme: ThemeData(fontFamily: "FigTree"),

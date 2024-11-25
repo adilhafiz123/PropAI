@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "716118676610",
+    "project_id": "propadvisor-bc710",
+    "storage_bucket": "propadvisor-bc710.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:716118676610:android:7e056895b8df703977909b",
+        "android_client_info": {
+          "package_name": "com.propadvisor.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCk0plK0aHARvW1oz4WB7EpDVj1eis2K2g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
