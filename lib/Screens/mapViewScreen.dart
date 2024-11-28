@@ -32,11 +32,11 @@ class _MapViewState extends State<MapView> {
     selectedListing = widget.listings[0];
 
     futureImages.add(getBytesFromAsset2("assets/pin_black.png"));
-    futureImages.add(getBytesFromAsset2("assets/pin_5.png"));
-    futureImages.add(getBytesFromAsset2("assets/pin_4.png"));
-    futureImages.add(getBytesFromAsset2("assets/pin_3.png"));
-    futureImages.add(getBytesFromAsset2("assets/pin_2.png"));
-    futureImages.add(getBytesFromAsset2("assets/pin_1.png"));
+    futureImages.add(getBytesFromAsset2("assets/pin_green.png"));
+    futureImages.add(getBytesFromAsset2("assets/pin_amber_green.png"));
+    futureImages.add(getBytesFromAsset2("assets/pin_amber.png"));
+    futureImages.add(getBytesFromAsset2("assets/pin_amber_red.png"));
+    futureImages.add(getBytesFromAsset2("assets/pin_red.png"));
 
     super.initState();
   }
@@ -45,17 +45,7 @@ class _MapViewState extends State<MapView> {
     mapController = controller;
   }
 
-  Future<Uint8List> getBytesFromAsset(String path, int width) async {
-    ByteData data = await rootBundle.load(path);
-    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
-        targetWidth: width, allowUpscaling: true);
-    ui.FrameInfo fi = await codec.getNextFrame();
-    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))!
-        .buffer
-        .asUint8List();
-  }
-
-  Future<Uint8List> getBytesFromAsset2(String path) async {
+  Future<Uint8List> getBytesFromAsset2(path) async {
     final ByteData bytes = await rootBundle.load(path);
     final Uint8List uint8Bytes = bytes.buffer.asUint8List();
     return uint8Bytes;
@@ -130,35 +120,18 @@ class _MapViewState extends State<MapView> {
                 if (snapshotImages.connectionState != ConnectionState.done) {
                   return const SizedBox();
                 }
-                //   return const Column(
-                //       mainAxisAlignment: MainAxisAlignment.center,
-                //       crossAxisAlignment: CrossAxisAlignment.center,
-                //       children: [
-                //         Center(
-                //           child: Text(
-                //             "Loading Pins",
-                //             style: TextStyle(fontFamily: "Nunito"),
-                //           ),
-                //         ),
-                //         Center(
-                //           child: CircularProgressIndicator(
-                //             color: Color.fromARGB(255, 9, 63, 66),
-                //           ),
-                //         )
-                //       ]); // Loading indicator
-                // }
 
                 var blackBitmapDiscriptor =
                     BitmapDescriptor.bytes(snapshotImages.data?[0]);
-                var shade1BitmapDiscriptor =
+                var greenBitmapDiscriptor =
                     BitmapDescriptor.bytes(snapshotImages.data?[1]);
-                var shade2BitmapDiscriptor =
+                var amberGreenBitmapDiscriptor =
                     BitmapDescriptor.bytes(snapshotImages.data?[2]);
-                var shade3BitmapDiscriptor =
+                var amberBitmapDiscriptor =
                     BitmapDescriptor.bytes(snapshotImages.data?[3]);
-                var shade4BitmapDiscriptor =
+                var amberRedBitmapDiscriptor =
                     BitmapDescriptor.bytes(snapshotImages.data?[4]);
-                var shade5BitmapDiscriptor =
+                var redBitmapDiscriptor =
                     BitmapDescriptor.bytes(snapshotImages.data?[5]);
 
                 final markers = <Marker>{};
@@ -167,15 +140,15 @@ class _MapViewState extends State<MapView> {
                     markerId: MarkerId(widget.listings[i].id),
                     icon: widget.listings[i] == selectedListing
                         ? blackBitmapDiscriptor
-                        : widget.listings[i].rating == 5
-                            ? shade1BitmapDiscriptor
-                            : widget.listings[i].rating == 4
-                                ? shade2BitmapDiscriptor
-                                : widget.listings[i].rating == 3
-                                    ? shade3BitmapDiscriptor
-                                    : widget.listings[i].rating == 2
-                                        ? shade4BitmapDiscriptor
-                                        : shade5BitmapDiscriptor,
+                        : widget.listings[i].rating > 4
+                            ? greenBitmapDiscriptor
+                            : widget.listings[i].rating > 3
+                                ? amberGreenBitmapDiscriptor
+                                : widget.listings[i].rating > 2
+                                    ? amberBitmapDiscriptor
+                                    : widget.listings[i].rating > 1
+                                        ? amberRedBitmapDiscriptor
+                                        : redBitmapDiscriptor,
                     position: LatLng(
                         locations[i][0].latitude, locations[i][0].longitude),
                     onTap: () =>

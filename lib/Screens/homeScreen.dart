@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_flutter_application/Firebase/firebase.dart';
 import 'package:my_flutter_application/Screens/listViewScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:my_flutter_application/Firebase/firebase_options.dart';
