@@ -3,8 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:flutter/services.dart';
-import 'package:my_flutter_application/ListingClass.dart';
-import 'package:my_flutter_application/homeScreen.dart';
+import 'package:my_flutter_application/Classes/ListingClass.dart';
+import 'package:my_flutter_application/Screens/homeScreen.dart';
 
 GenerativeModel createGeminiModel() {
   final model = GenerativeModel(

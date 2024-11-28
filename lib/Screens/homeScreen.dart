@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:my_flutter_application/firebase.dart';
-import 'package:my_flutter_application/listViewScreen.dart';
+import 'package:my_flutter_application/Firebase/firebase.dart';
+import 'package:my_flutter_application/Screens/listViewScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:my_flutter_application/firebase_options.dart';
+import 'package:my_flutter_application/Firebase/firebase_options.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 

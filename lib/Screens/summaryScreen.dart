@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 //import 'package:url_launcher/url_launcher.dart';
-import 'package:my_flutter_application/ListingClass.dart';
+import 'package:my_flutter_application/Classes/ListingClass.dart';
 
 class ListingScreen extends StatefulWidget {
   const ListingScreen(this.listing, {super.key});

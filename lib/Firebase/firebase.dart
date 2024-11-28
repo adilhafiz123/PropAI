@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:my_flutter_application/ListingClass.dart';
-import 'package:my_flutter_application/gemini.dart';
+import 'package:my_flutter_application/Classes/ListingClass.dart';
+import 'package:my_flutter_application/LLMs/gemini.dart';
 
 class DatabaseService {
   final CollectionReference propCollection =

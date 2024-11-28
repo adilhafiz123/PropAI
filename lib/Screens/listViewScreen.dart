@@ -2,13 +2,13 @@ import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
-import 'package:my_flutter_application/mapViewScreen.dart';
-import 'package:my_flutter_application/gemini.dart';
-import 'package:my_flutter_application/rightmoveScraper.dart';
-import 'package:my_flutter_application/scraperUrls.dart';
-import 'package:my_flutter_application/rightmoveOutcodeMapping.dart';
-import 'package:my_flutter_application/firebase.dart';
-import 'package:my_flutter_application/ListingClass.dart';
+import 'package:my_flutter_application/Screens/mapViewScreen.dart';
+import 'package:my_flutter_application/LLMs/gemini.dart';
+import 'package:my_flutter_application/Scraper/rightmoveScraper.dart';
+import 'package:my_flutter_application/Scraper/rightmoveScraperUrls.dart';
+import 'package:my_flutter_application/Scraper/rightmoveOutcodeMapping.dart';
+import 'package:my_flutter_application/Firebase/firebase.dart';
+import 'package:my_flutter_application/Classes/ListingClass.dart';
 import "summaryScreen.dart";
 
 class ListScreen extends StatefulWidget {

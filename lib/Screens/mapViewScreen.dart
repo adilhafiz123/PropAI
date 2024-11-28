@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:my_flutter_application/listViewScreen.dart';
-import 'package:my_flutter_application/ListingClass.dart';
-import 'package:my_flutter_application/summaryScreen.dart';
+import 'package:my_flutter_application/Screens/listViewScreen.dart';
+import 'package:my_flutter_application/Classes/ListingClass.dart';
+import 'package:my_flutter_application/Screens/summaryScreen.dart';
 
 class MapView extends StatefulWidget {
   const MapView(this.listings, {super.key});
