@@ -3,10 +3,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:my_flutter_application/mapViewScreen.dart';
-import 'package:my_flutter_application/model.dart';
-import 'package:my_flutter_application/scraperProperty.dart';
+import 'package:my_flutter_application/gemini.dart';
+import 'package:my_flutter_application/rightmoveScraper.dart';
 import 'package:my_flutter_application/scraperUrls.dart';
-import 'package:my_flutter_application/outcodeMapping.dart';
+import 'package:my_flutter_application/rightmoveOutcodeMapping.dart';
+import 'package:my_flutter_application/firebase.dart';
+import 'package:my_flutter_application/ListingClass.dart';
 import "summaryScreen.dart";
 
 class ListScreen extends StatefulWidget {
@@ -44,26 +46,35 @@ class _ListScreenState extends State<ListScreen> {
     var saleOrRentString = isSale ? "property-for-sale" : "property-to-rent";
     var topLevelUrl =
         "https://www.rightmove.co.uk/$saleOrRentString/find.html?locationIdentifier=OUTCODE%5E$code&numberOfPropertiesPerPage=24&sortType=6&radius=0.0&index=0&includeSSTC=false&viewType=LIST&channel=BUY&areaSizeUnit=sqft&currencyCode=GBP&isFetching=false&searchLocation=$outcode&useLocationIdentifier=true&previousSearchLocation=null";
-    final propertyLinks = (await getListOfUrls(topLevelUrl)).toSet().toList();
-
-    var rng = Random();
+    final propertyLinksAndUrls =
+        (await getListOfUrls(topLevelUrl)).toSet().toList();
 
     ////////////////////////////////////////////////////////////////////////////
-    const howManyProperties = 4;
+    const howManyProperties = 10;
     ////////////////////////////////////////////////////////////////////////////
 
     List<Listing> listings = List.empty(growable: true);
 
-    var model = createGeminiModel();
+    var model = createGeminiModel(); //Only do if >1 propFromGemini
     ChatSession chat = await startGeminiChat(model);
     int setupTokenCount = await setupGeminiChat(chat, model);
+    var rng = Random();
     for (int i = 0; i < howManyProperties; i++) {
-      final ms = rng.nextInt(3000);
-      sleep(Duration(milliseconds: ms));
-      final property = await scrapeRightmoveProperty(propertyLinks[i]);
-      addresses.add(property["address"]);
-      Listing listing = await buildListing(chat, property);
-      listings.add(listing);
+      var url = propertyLinksAndUrls[0][i];
+      var id = propertyLinksAndUrls[1][i];
+
+      var listing = await DatabaseService().getProperty(id);
+      if (listing != null) {
+        listings.add(listing);
+      } else {
+        final ms = rng.nextInt(3000);
+        sleep(Duration(milliseconds: ms));
+        final property = await scrapeRightmoveProperty(url);
+        addresses.add(property["address"]);
+        Listing listing = await buildListingFromGemini(chat, property);
+        listings.add(listing);
+        DatabaseService().updateProperty(listing);
+      }
     }
     return listings;
   }
@@ -201,6 +212,11 @@ Widget buildCard(Listing listing) {
                     const SizedBox(
                       width: 8,
                     ),
+                    SizedBox(
+                        height: 20,
+                        child: listing.fromFirebase
+                            ? Image.asset("assets/firebase.png")
+                            : Image.asset("assets/gemini.png")),
                     // Container(
                     //   width: 27.0,
                     //   height: 27.0,

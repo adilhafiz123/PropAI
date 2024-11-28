@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:flutter/services.dart';
-import 'package:geocoding/geocoding.dart';
+import 'package:my_flutter_application/ListingClass.dart';
 import 'package:my_flutter_application/homeScreen.dart';
 
 GenerativeModel createGeminiModel() {
@@ -43,43 +43,6 @@ Future<GenerateContentResponse> sendGeminiTextAndImages(
 Future<String> assetsFileToString(path) async {
   WidgetsFlutterBinding.ensureInitialized();
   return await rootBundle.loadString(path);
-}
-
-class Listing {
-  String id;
-  String url;
-  double rating;
-  String headline;
-  String description;
-  List<String> keyFeatures;
-  String address;
-  String price;
-  String type;
-  String? beds;
-  String? baths;
-  String? sqft;
-  List<String> imagePaths = List.empty();
-  String geminiSummary;
-  int inputTokenCount;
-  int outputTokenCount;
-
-  Listing(
-      this.id,
-      this.url,
-      this.rating,
-      this.headline,
-      this.address,
-      this.description,
-      this.keyFeatures,
-      this.price,
-      this.type,
-      this.beds,
-      this.baths,
-      this.sqft,
-      this.imagePaths,
-      this.geminiSummary,
-      this.inputTokenCount,
-      this.outputTokenCount);
 }
 
 String createGeminiInput(Map<String, dynamic> property) {
@@ -147,7 +110,7 @@ Future<int> setupGeminiChat(ChatSession chat, GenerativeModel model) async {
   return countResponse.totalTokens;
 }
 
-Future<Listing> buildListing(
+Future<Listing> buildListingFromGemini(
     ChatSession chat, Map<String, dynamic> property) async {
   String textInput = createGeminiInput(property);
   GenerateContentResponse response =
@@ -163,18 +126,19 @@ Future<Listing> buildListing(
 
   Listing listing = Listing(
       property['id'],
-      property['url'],
+      property['url'] ?? "",
+      false,
       overallRating,
-      property['headline'],
-      property['address'],
-      property['description'],
-      property['keyFeatures'],
-      property['price'],
-      property['type'],
-      property['bedrooms'],
-      property['bathrooms'],
-      property['sqft'] ?? jsonObj['SquareFootage'],
-      property['images'],
+      property['headline'] ?? "",
+      property['address'] ?? "",
+      property['description'] ?? "",
+      property['keyFeatures'] ?? List.empty(),
+      property['price'] ?? "",
+      property['type'] ?? "",
+      property['bedrooms'] ?? "",
+      property['bathrooms'] ?? "",
+      property['sqft'] ?? jsonObj['SquareFootage'] ?? "Ask Agent",
+      property['images'] ?? List.empty(),
       geminiSummary,
       inputTokenCount,
       outputTokenCount);

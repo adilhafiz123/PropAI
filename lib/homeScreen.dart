@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_flutter_application/firebase.dart';
 import 'package:my_flutter_application/listViewScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:my_flutter_application/firebase_options.dart';
@@ -7,13 +8,13 @@ final navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     theme: ThemeData(fontFamily: "FigTree"),
-    //home: const Home(),
-    home: const ListScreen(true, "E14"),
+    home: const Home(),
+    //home: const ListScreen(true, "E14"),
     navigatorKey: navigatorKey, // Setting a global key for navigator
   ));
 }

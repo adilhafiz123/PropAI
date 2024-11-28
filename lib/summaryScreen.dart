@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 //import 'package:url_launcher/url_launcher.dart';
-import 'package:my_flutter_application/model.dart';
+import 'package:my_flutter_application/ListingClass.dart';
 
 class ListingScreen extends StatefulWidget {
   const ListingScreen(this.listing, {super.key});
@@ -272,13 +272,13 @@ class _ListingScreenState extends State<ListingScreen> {
                                   fontFamily: "Nunito",
                                   fontWeight: FontWeight.w900))))),
                 ),
-                SelectableText(
-                  widget.listing.url,
-                  style: const TextStyle(
-                      fontFamily: "Nunito",
-                      fontWeight: FontWeight.w900,
-                      color: Colors.blue),
-                )
+                // SelectableText(
+                //   widget.listing.url,
+                //   style: const TextStyle(
+                //       fontFamily: "Nunito",
+                //       fontWeight: FontWeight.w900,
+                //       color: Colors.blue),
+                // )
                 //InkWell(
                 //child: Text(widget.listing.url),
                 //onTap: () => launchUrl(Uri.parse(widget.listing.url))

@@ -1,12 +1,10 @@
-import 'dart:typed_data';
 import 'dart:ui' as ui;
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:my_flutter_application/listViewScreen.dart';
-import 'package:my_flutter_application/model.dart';
+import 'package:my_flutter_application/ListingClass.dart';
 import 'package:my_flutter_application/summaryScreen.dart';
 
 class MapView extends StatefulWidget {
@@ -34,13 +32,11 @@ class _MapViewState extends State<MapView> {
     selectedListing = widget.listings[0];
 
     futureImages.add(getBytesFromAsset2("assets/pin_black.png"));
-    futureImages.add(getBytesFromAsset2("assets/pin_red.png"));
-    futureImages.add(getBytesFromAsset2("assets/pin_1.png"));
-    futureImages.add(getBytesFromAsset2("assets/pin_2.png"));
-    futureImages.add(getBytesFromAsset2("assets/pin_3.png"));
-    futureImages.add(getBytesFromAsset2("assets/pin_4.png"));
     futureImages.add(getBytesFromAsset2("assets/pin_5.png"));
-    futureImages.add(getBytesFromAsset2("assets/pin_6.png"));
+    futureImages.add(getBytesFromAsset2("assets/pin_4.png"));
+    futureImages.add(getBytesFromAsset2("assets/pin_3.png"));
+    futureImages.add(getBytesFromAsset2("assets/pin_2.png"));
+    futureImages.add(getBytesFromAsset2("assets/pin_1.png"));
 
     super.initState();
   }
@@ -108,9 +104,12 @@ class _MapViewState extends State<MapView> {
                 children: [
                   Center(
                     child: Text(
-                      "Loading Map",
+                      "Loading Map...",
                       style: TextStyle(fontFamily: "Nunito"),
                     ),
+                  ),
+                  SizedBox(
+                    height: 30,
                   ),
                   Center(
                     child: CircularProgressIndicator(
@@ -129,39 +128,38 @@ class _MapViewState extends State<MapView> {
               future: Future.wait(futureImages),
               builder: (context, AsyncSnapshot<List<dynamic>> snapshotImages) {
                 if (snapshotImages.connectionState != ConnectionState.done) {
-                  return const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Center(
-                          child: Text(
-                            "Loading Pins",
-                            style: TextStyle(fontFamily: "Nunito"),
-                          ),
-                        ),
-                        Center(
-                          child: CircularProgressIndicator(
-                            color: Color.fromARGB(255, 9, 63, 66),
-                          ),
-                        )
-                      ]); // Loading indicator
+                  return const SizedBox();
                 }
+                //   return const Column(
+                //       mainAxisAlignment: MainAxisAlignment.center,
+                //       crossAxisAlignment: CrossAxisAlignment.center,
+                //       children: [
+                //         Center(
+                //           child: Text(
+                //             "Loading Pins",
+                //             style: TextStyle(fontFamily: "Nunito"),
+                //           ),
+                //         ),
+                //         Center(
+                //           child: CircularProgressIndicator(
+                //             color: Color.fromARGB(255, 9, 63, 66),
+                //           ),
+                //         )
+                //       ]); // Loading indicator
+                // }
+
                 var blackBitmapDiscriptor =
                     BitmapDescriptor.bytes(snapshotImages.data?[0]);
-                var redBitmapDiscriptor =
-                    BitmapDescriptor.bytes(snapshotImages.data?[1]);
                 var shade1BitmapDiscriptor =
-                    BitmapDescriptor.bytes(snapshotImages.data?[2]);
+                    BitmapDescriptor.bytes(snapshotImages.data?[1]);
                 var shade2BitmapDiscriptor =
-                    BitmapDescriptor.bytes(snapshotImages.data?[3]);
+                    BitmapDescriptor.bytes(snapshotImages.data?[2]);
                 var shade3BitmapDiscriptor =
-                    BitmapDescriptor.bytes(snapshotImages.data?[4]);
+                    BitmapDescriptor.bytes(snapshotImages.data?[3]);
                 var shade4BitmapDiscriptor =
-                    BitmapDescriptor.bytes(snapshotImages.data?[5]);
+                    BitmapDescriptor.bytes(snapshotImages.data?[4]);
                 var shade5BitmapDiscriptor =
-                    BitmapDescriptor.bytes(snapshotImages.data?[6]);
-                var shade6BitmapDiscriptor =
-                    BitmapDescriptor.bytes(snapshotImages.data?[7]);
+                    BitmapDescriptor.bytes(snapshotImages.data?[5]);
 
                 final markers = <Marker>{};
                 for (int i = 0; i < locations.length; i++) {
@@ -177,9 +175,7 @@ class _MapViewState extends State<MapView> {
                                     ? shade3BitmapDiscriptor
                                     : widget.listings[i].rating == 2
                                         ? shade4BitmapDiscriptor
-                                        : widget.listings[i].rating == 1
-                                            ? shade5BitmapDiscriptor
-                                            : shade6BitmapDiscriptor,
+                                        : shade5BitmapDiscriptor,
                     position: LatLng(
                         locations[i][0].latitude, locations[i][0].longitude),
                     onTap: () =>
