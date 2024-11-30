@@ -61,7 +61,9 @@ class _ListScreenState extends State<ListScreen> {
 
     var model = createGeminiModel(); //Only do if >1 propFromGemini
     ChatSession chat = await startGeminiChat(model);
-    int setupTokenCount = await setupGeminiChat(chat, model);
+    /*int setupTokenCount = */ await setupGeminiChat(chat, model);
+    String geminiAreaSummary = await sendGeminiText(chat,
+        "Tell me what I need to know about the $postcode area if I am considering moving there");
     var rng = Random();
     for (int i = 0; i < howManyProperties; i++) {
       var url = urlsAndIds[0][
@@ -77,7 +79,7 @@ class _ListScreenState extends State<ListScreen> {
         final property = await scrapeRightmoveProperty(url);
         addresses.add(property["address"]);
         Listing listing =
-            await buildListingFromGemini(chat, property, postcode);
+            await buildListingFromGemini(chat, property, geminiAreaSummary);
         listings.add(listing);
         DatabaseService().updateProperty(listing);
       }
