@@ -14,6 +14,7 @@ class Listing {
   String? sqft;
   List<String> imagePaths = List.empty();
   String geminiSummary;
+  String geminiAreaSummary;
   int inputTokenCount;
   int outputTokenCount;
 
@@ -33,6 +34,7 @@ class Listing {
       this.sqft,
       this.imagePaths,
       this.geminiSummary,
+      this.geminiAreaSummary,
       this.inputTokenCount,
       this.outputTokenCount);
 }

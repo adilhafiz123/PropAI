@@ -40,28 +40,33 @@ class _ListScreenState extends State<ListScreen> {
   }
 
   Future<List<Listing>> buildListingsAsync(String postcode) async {
+    List<Listing> listings = List.empty(growable: true);
+
+    if (postcode == "firebase") {
+      return await DatabaseService().getAllProperties();
+    }
+
     var outcode = postcode.split(' ')[0].toUpperCase();
     var outcodeMap = buildOutcodeMap();
     var code = outcodeMap[outcode];
     var saleOrRentString = isSale ? "property-for-sale" : "property-to-rent";
     var topLevelUrl =
         "https://www.rightmove.co.uk/$saleOrRentString/find.html?locationIdentifier=OUTCODE%5E$code&numberOfPropertiesPerPage=24&sortType=6&radius=0.0&index=0&includeSSTC=false&viewType=LIST&channel=BUY&areaSizeUnit=sqft&currencyCode=GBP&isFetching=false&searchLocation=$outcode&useLocationIdentifier=true&previousSearchLocation=null";
-    final propertyLinksAndUrls =
-        (await getListOfUrls(topLevelUrl)).toSet().toList();
+    final urlsAndIds =
+        (await getListOfUrlsAndIds(topLevelUrl)).toSet().toList();
 
     ////////////////////////////////////////////////////////////////////////////
-    const howManyProperties = 10;
+    const howManyProperties = 1;
     ////////////////////////////////////////////////////////////////////////////
-
-    List<Listing> listings = List.empty(growable: true);
 
     var model = createGeminiModel(); //Only do if >1 propFromGemini
     ChatSession chat = await startGeminiChat(model);
     int setupTokenCount = await setupGeminiChat(chat, model);
     var rng = Random();
     for (int i = 0; i < howManyProperties; i++) {
-      var url = propertyLinksAndUrls[0][i];
-      var id = propertyLinksAndUrls[1][i];
+      var url = urlsAndIds[0][
+          i]; //https://www.rightmove.co.uk/properties/154985657#/?channel=RES_LET";
+      var id = urlsAndIds[1][i]; //"154985657"
 
       var listing = await DatabaseService().getProperty(id);
       if (listing != null) {
@@ -71,7 +76,8 @@ class _ListScreenState extends State<ListScreen> {
         sleep(Duration(milliseconds: ms));
         final property = await scrapeRightmoveProperty(url);
         addresses.add(property["address"]);
-        Listing listing = await buildListingFromGemini(chat, property);
+        Listing listing =
+            await buildListingFromGemini(chat, property, postcode);
         listings.add(listing);
         DatabaseService().updateProperty(listing);
       }
@@ -136,9 +142,19 @@ class _ListScreenState extends State<ListScreen> {
             listings = snapshot.data!;
             mapViewButtonEnabled = true;
             return ListView.builder(
-                itemCount: listings.length,
+                itemCount: listings.length + 1,
                 itemBuilder: (BuildContext context, int index) {
-                  final listing = listings[index];
+                  if (index == 0) {
+                    return Padding(
+                      padding:
+                          const EdgeInsets.only(bottom: 6, top: 6, left: 8),
+                      child: Text(
+                        "${listings.length} results",
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    );
+                  }
+                  final listing = listings[index - 1];
 
                   return Padding(
                     padding: const EdgeInsets.all(4.0),

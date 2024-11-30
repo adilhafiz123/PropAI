@@ -110,8 +110,8 @@ Future<int> setupGeminiChat(ChatSession chat, GenerativeModel model) async {
   return countResponse.totalTokens;
 }
 
-Future<Listing> buildListingFromGemini(
-    ChatSession chat, Map<String, dynamic> property) async {
+Future<Listing> buildListingFromGemini(ChatSession chat,
+    Map<String, dynamic> property, String searchedPostcode) async {
   String textInput = createGeminiInput(property);
   GenerateContentResponse response =
       await sendGeminiTextAndImages(chat, textInput, property['images']);
@@ -120,6 +120,9 @@ Future<Listing> buildListingFromGemini(
   var jsonObj = jsonDecode(responseText.substring(8, responseText.length - 4));
   String geminiSummary = jsonObj['Summary'];
   double overallRating = jsonObj['OverallRating'];
+
+  String geminiAreaSummary = await sendGeminiText(chat,
+      "Tell me what I need to know about the $searchedPostcode area if I am considering moving there");
 
   int inputTokenCount = response.usageMetadata?.promptTokenCount ?? 0;
   int outputTokenCount = response.usageMetadata?.candidatesTokenCount ?? 0;
@@ -140,6 +143,7 @@ Future<Listing> buildListingFromGemini(
       property['sqft'] ?? jsonObj['SquareFootage'] ?? "Ask Agent",
       property['images'] ?? List.empty(),
       geminiSummary,
+      geminiAreaSummary,
       inputTokenCount,
       outputTokenCount);
 

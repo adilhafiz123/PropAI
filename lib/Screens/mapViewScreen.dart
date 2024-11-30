@@ -158,6 +158,7 @@ class _MapViewState extends State<MapView> {
 
                 double averageLat = 0.0;
                 double averageLng = 0.0;
+
                 for (Marker marker in markers) {
                   averageLat += marker.position.latitude;
                   averageLng += marker.position.longitude;

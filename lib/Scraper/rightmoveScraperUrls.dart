@@ -3,7 +3,7 @@ import 'dart:core';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 
-Future<List<List<String>>> getListOfUrls(String topLevelUrl) async {
+Future<List<List<String>>> getListOfUrlsAndIds(String topLevelUrl) async {
   var headersMap = {
     "User-Agent":
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
@@ -28,16 +28,16 @@ Future<List<List<String>>> getListOfUrls(String topLevelUrl) async {
 
     // Extract the href attribute and prepend the base URL
     String baseUrl = "https://www.rightmove.co.uk";
-    List<String> propertyLinks = linkElements
+    List<String> urls = linkElements
         .map((element) => element.attributes['href'] != null
             ? '$baseUrl${element.attributes['href']}'
             : null)
-        .where((link) => link != null) // Remove nulls
+        .where((url) => url != null) // Remove nulls
         .cast<String>() // Ensure the type is String
         .toSet()
         .toList();
 
-    var ids = propertyLinks.map(
+    var ids = urls.map(
       (url) {
         final uri = Uri.parse(url);
         final pathSegments = uri.pathSegments;
@@ -50,7 +50,7 @@ Future<List<List<String>>> getListOfUrls(String topLevelUrl) async {
       },
     ).toList();
 
-    return [propertyLinks, ids];
+    return [urls, ids];
   }
   return List.empty();
 }

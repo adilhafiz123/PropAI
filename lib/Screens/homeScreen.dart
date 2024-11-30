@@ -119,7 +119,19 @@ class _HomeState extends State<Home> {
             ),
           ],
         ),
-        const SizedBox(height: 80),
+        // const SizedBox(height: 30),
+        // IconButton(
+        //   icon: Image.asset('assets/firebase.png'),
+        //   iconSize: 50,
+        //   onPressed: () {
+        //     Navigator.push(
+        //       context,
+        //       MaterialPageRoute(
+        //           builder: (context) => const ListScreen(false, "firebase")),
+        //     );
+        //   },
+        // ),
+        const SizedBox(height: 30),
         Image.asset("assets/houses.png")
       ]),
     );

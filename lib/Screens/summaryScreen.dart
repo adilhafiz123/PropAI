@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:google_generative_ai/google_generative_ai.dart';
 //import 'package:url_launcher/url_launcher.dart';
 import 'package:my_flutter_application/Classes/ListingClass.dart';
+import 'package:my_flutter_application/LLMs/gemini.dart';
 
 class ListingScreen extends StatefulWidget {
   const ListingScreen(this.listing, {super.key});
@@ -271,6 +273,39 @@ class _ListingScreenState extends State<ListingScreen> {
                                   fontSize: 15.0,
                                   fontFamily: "Nunito",
                                   fontWeight: FontWeight.w900))))),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                OutlinedButton(
+                  child: const Text("More about the area",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                              title: const Center(
+                                  child: Text(
+                                "Area Summary",
+                                style: TextStyle(
+                                    fontSize: 22, fontWeight: FontWeight.bold),
+                              )),
+                              scrollable: true,
+                              content: MarkdownBody(
+                                  data: widget.listing.geminiAreaSummary),
+                              insetPadding: const EdgeInsets.only(
+                                  right: 20, left: 20, top: 20, bottom: 60),
+                              // actions: [
+                              //   TextButton(
+                              //       onPressed: () => Navigator.pop(context),
+                              //       child: const Text("Back")),
+                              // ],
+                            ));
+                  },
+                ),
+                const SizedBox(
+                  height: 20,
                 ),
                 // SelectableText(
                 //   widget.listing.url,
