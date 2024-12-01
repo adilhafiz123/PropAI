@@ -1,6 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 import 'package:html/dom.dart';
+import 'package:my_flutter_application/helperFunctions.dart';
 
 Future<Map<String, dynamic>> scrapeRightmoveProperty(String url) async {
   var headersMap = {
@@ -49,10 +50,10 @@ Future<Map<String, dynamic>> scrapeRightmoveProperty(String url) async {
     // Floorplan
     var floorplanElement =
         document.querySelector('a[class="_1EKvilxkEc0XS32Gwbn-iU"] img[src]');
-    final floorPlan = floorplanElement?.attributes['src'] ??
+    final floorPlanThumbnailUrl = floorplanElement?.attributes['src'] ??
         floorplanElement?.attributes['content']!;
     property['floorplanPath'] =
-        "${floorPlan?.substring(0, floorPlan.length - 17)}.jpeg";
+        inferFloorplanUrlFromThumnailUrk(floorPlanThumbnailUrl);
 
     String? getPropertyData(String labelText) {
       // Find the label element by its text

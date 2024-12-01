@@ -20,3 +20,14 @@ String extractOutcode(String postcode) {
   // Return empty string for invalid input
   return '';
 }
+
+String inferFloorplanUrlFromThumnailUrk(String? url) {
+  if (url == null) return "";
+  // Regular expression to match and remove the "_max_XXXxXXX" part
+  RegExp maxResolutionRegex = RegExp(r'(_max_\d+x\d+)(\.[^.]+)$');
+
+  return url.replaceFirstMapped(maxResolutionRegex, (match) {
+    // Return the original filename without the max resolution part
+    return match.group(2) ?? '';
+  });
+}
