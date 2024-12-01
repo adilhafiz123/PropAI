@@ -49,13 +49,13 @@ class _HomeState extends State<Home> {
         ),
         centerTitle: true,
         foregroundColor: Colors.white,
-        backgroundColor: const Color.fromARGB(255, 9, 53, 90),
+        backgroundColor: const Color.fromARGB(255, 14, 40, 60),
       ),
       body: Column(children: [
         const Center(
             child: Text("Enter Postcode",
                 style: TextStyle(
-                    color: Color.fromARGB(255, 9, 63, 66),
+                    color: Color.fromARGB(255, 14, 60, 40),
                     fontSize: 34,
                     fontWeight: FontWeight.bold,
                     fontFamily: "Lato"))),
@@ -83,7 +83,7 @@ class _HomeState extends State<Home> {
                               ListScreen(true, myController.text)),
                     );
                   },
-                  backgroundColor: const Color.fromARGB(255, 9, 63, 66),
+                  backgroundColor: const Color.fromARGB(255, 14, 40, 60),
                   child: const Text(
                     "For Sale",
                     style: TextStyle(
@@ -106,7 +106,7 @@ class _HomeState extends State<Home> {
                               ListScreen(false, myController.text)),
                     );
                   },
-                  backgroundColor: const Color.fromARGB(255, 9, 63, 66),
+                  backgroundColor: const Color.fromARGB(255, 14, 40, 60),
                   child: const Text(
                     "To Rent",
                     style: TextStyle(

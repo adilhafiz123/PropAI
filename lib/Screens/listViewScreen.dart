@@ -97,7 +97,7 @@ class _ListScreenState extends State<ListScreen> {
           ),
           centerTitle: true,
           foregroundColor: Colors.white,
-          backgroundColor: const Color.fromARGB(255, 9, 53, 90),
+          backgroundColor: const Color.fromARGB(255, 14, 40, 60),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: SizedBox(
