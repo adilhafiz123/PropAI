@@ -52,6 +52,16 @@ class _ListingScreenState extends State<ListingScreen> {
         child: Image.network(filename));
   }
 
+  Widget buildFloorPlanDialog(path) {
+    return Dialog(
+      insetPadding: const EdgeInsets.only(right: 15, left: 15),
+      child: FittedBox(
+          child: ClipRRect(
+              borderRadius: BorderRadius.circular(50.0),
+              child: Image.network(path))),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -175,9 +185,11 @@ class _ListingScreenState extends State<ListingScreen> {
                 const SizedBox(
                   height: 16,
                 ),
-                Wrap(
-                  alignment: WrapAlignment.spaceAround,
+                Row(
                   children: [
+                    const SizedBox(
+                      width: 30,
+                    ),
                     SizedBox(
                       width: 60,
                       child: Row(
@@ -196,6 +208,9 @@ class _ListingScreenState extends State<ListingScreen> {
                           ),
                         ],
                       ),
+                    ),
+                    const SizedBox(
+                      width: 20,
                     ),
                     SizedBox(
                       width: 60,
@@ -216,23 +231,33 @@ class _ListingScreenState extends State<ListingScreen> {
                         ],
                       ),
                     ),
+                    const SizedBox(
+                      width: 15,
+                    ),
                     SizedBox(
-                      width: 120,
-                      child: Row(
-                        children: [
-                          const Image(
-                            image: AssetImage("assets/floor.png"),
-                            height: 25,
-                            width: 25,
-                          ),
-                          const SizedBox(width: 10),
-                          Text(
-                            widget.listing.sqft == null
-                                ? "?"
-                                : "${widget.listing.sqft}",
-                            style: const TextStyle(fontSize: 16),
-                          )
-                        ],
+                      width: 160,
+                      child: OutlinedButton(
+                        onPressed: () => showDialog(
+                          context: context,
+                          builder: (context) => buildFloorPlanDialog(
+                              widget.listing.floorplanPath),
+                        ),
+                        child: Row(
+                          children: [
+                            const Image(
+                              image: AssetImage("assets/floor.png"),
+                              height: 25,
+                              width: 25,
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              widget.listing.sqft == null
+                                  ? "?"
+                                  : "${widget.listing.sqft}",
+                              style: const TextStyle(fontSize: 16),
+                            )
+                          ],
+                        ),
                       ),
                     )
                   ],
@@ -275,32 +300,35 @@ class _ListingScreenState extends State<ListingScreen> {
                 const SizedBox(
                   height: 20,
                 ),
-                OutlinedButton(
-                  child: const Text("More about the area",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                              title: const Center(
-                                  child: Text(
-                                "Area Summary",
-                                style: TextStyle(
-                                    fontSize: 22, fontWeight: FontWeight.bold),
-                              )),
-                              scrollable: true,
-                              content: MarkdownBody(
-                                  data: widget.listing.geminiAreaSummary),
-                              insetPadding: const EdgeInsets.only(
-                                  right: 20, left: 20, top: 20, bottom: 60),
-                              // actions: [
-                              //   TextButton(
-                              //       onPressed: () => Navigator.pop(context),
-                              //       child: const Text("Back")),
-                              // ],
-                            ));
-                  },
+                SizedBox(
+                  child: OutlinedButton(
+                    child: const Text("About the area",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600)),
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                                title: const Center(
+                                    child: Text(
+                                  "Area Summary",
+                                  style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold),
+                                )),
+                                scrollable: true,
+                                content: MarkdownBody(
+                                    data: widget.listing.geminiAreaSummary),
+                                insetPadding: const EdgeInsets.only(
+                                    right: 20, left: 20, top: 20, bottom: 60),
+                                // actions: [
+                                //   TextButton(
+                                //       onPressed: () => Navigator.pop(context),
+                                //       child: const Text("Back")),
+                                // ],
+                              ));
+                    },
+                  ),
                 ),
                 const SizedBox(
                   height: 20,

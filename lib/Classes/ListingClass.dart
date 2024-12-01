@@ -13,6 +13,7 @@ class Listing {
   String? baths;
   String? sqft;
   List<String> imagePaths = List.empty();
+  String? floorplanPath;
   String geminiSummary;
   String geminiAreaSummary;
   int inputTokenCount;
@@ -33,6 +34,7 @@ class Listing {
       this.baths,
       this.sqft,
       this.imagePaths,
+      this.floorplanPath,
       this.geminiSummary,
       this.geminiAreaSummary,
       this.inputTokenCount,
