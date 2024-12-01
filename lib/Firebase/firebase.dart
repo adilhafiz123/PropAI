@@ -4,6 +4,8 @@ import 'package:my_flutter_application/Classes/ListingClass.dart';
 class DatabaseService {
   final CollectionReference propCollection =
       FirebaseFirestore.instance.collection("properties");
+  final CollectionReference areaCollection =
+      FirebaseFirestore.instance.collection("areas");
 
   Future updateProperty(Listing listing) async {
     return await propCollection.doc(listing.id).set({
@@ -24,6 +26,12 @@ class DatabaseService {
       'geminiAreaSummary': listing.geminiAreaSummary,
       'inputTokenCount': listing.inputTokenCount,
       'outputTokenCount': listing.outputTokenCount,
+    });
+  }
+
+  Future updateAreaSummary(String outcode, String areaSummary) async {
+    return await areaCollection.doc(outcode).set({
+      'areaSummary': areaSummary,
     });
   }
 
@@ -64,6 +72,16 @@ class DatabaseService {
     if (docSnapshot.exists) {
       var data = docSnapshot.data() as Map<String, dynamic>;
       return listingFromSnapshot(data, id);
+    }
+    return null;
+  }
+
+  Future<String?> getAreaSummary(String outcode) async {
+    final docRef = FirebaseFirestore.instance.collection("areas").doc(outcode);
+    final docSnapshot = await docRef.get();
+    if (docSnapshot.exists) {
+      var data = docSnapshot.data() as Map<String, dynamic>;
+      return data["areaSummary"];
     }
     return null;
   }

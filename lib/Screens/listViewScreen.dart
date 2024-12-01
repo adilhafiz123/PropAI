@@ -9,6 +9,7 @@ import 'package:my_flutter_application/Scraper/rightmoveScraperUrls.dart';
 import 'package:my_flutter_application/Scraper/rightmoveOutcodeMapping.dart';
 import 'package:my_flutter_application/Firebase/firebase.dart';
 import 'package:my_flutter_application/Classes/ListingClass.dart';
+import 'package:my_flutter_application/helperFunctions.dart';
 import "summaryScreen.dart";
 
 class ListScreen extends StatefulWidget {
@@ -46,7 +47,7 @@ class _ListScreenState extends State<ListScreen> {
       return await DatabaseService().getAllProperties();
     }
 
-    var outcode = postcode.split(' ')[0].toUpperCase();
+    var outcode = extractOutcode(postcode);
     var outcodeMap = buildOutcodeMap();
     var code = outcodeMap[outcode];
     var saleOrRentString = isSale ? "property-for-sale" : "property-to-rent";
@@ -62,8 +63,13 @@ class _ListScreenState extends State<ListScreen> {
     var model = createGeminiModel(); //Only do if >1 propFromGemini
     ChatSession chat = await startGeminiChat(model);
     /*int setupTokenCount = */ await setupGeminiChat(chat, model);
-    String geminiAreaSummary = await sendGeminiText(chat,
-        "Tell me what I need to know about the $postcode area if I am considering moving there");
+    String? areaSummary = await DatabaseService().getAreaSummary(outcode);
+    if (areaSummary == null) {
+      areaSummary = await sendGeminiText(chat,
+          "Tell me what I need to know about the $postcode area if I am considering moving there");
+      DatabaseService().updateAreaSummary(outcode, areaSummary);
+    }
+
     var rng = Random();
     for (int i = 0; i < howManyProperties; i++) {
       var url = urlsAndIds[0][
@@ -79,7 +85,7 @@ class _ListScreenState extends State<ListScreen> {
         final property = await scrapeRightmoveProperty(url);
         addresses.add(property["address"]);
         Listing listing =
-            await buildListingFromGemini(chat, property, geminiAreaSummary);
+            await buildListingFromGemini(chat, property, areaSummary);
         listings.add(listing);
         DatabaseService().updateProperty(listing);
       }
