@@ -11,7 +11,7 @@ Future<void> main() async {
 
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    theme: ThemeData(fontFamily: "FigTree"),
+    theme: ThemeData(fontFamily: "FigTree", primaryColor: Colors.green),
     home: const Home(),
     //home: const ListScreen(true, "E14"),
     navigatorKey: navigatorKey, // Setting a global key for navigator
@@ -83,7 +83,7 @@ class _HomeState extends State<Home> {
                               ListScreen(true, myController.text)),
                     );
                   },
-                  backgroundColor: const Color.fromARGB(255, 14, 40, 60),
+                  backgroundColor: const Color.fromARGB(255, 9, 63, 66),
                   child: const Text(
                     "For Sale",
                     style: TextStyle(
@@ -106,7 +106,7 @@ class _HomeState extends State<Home> {
                               ListScreen(false, myController.text)),
                     );
                   },
-                  backgroundColor: const Color.fromARGB(255, 14, 40, 60),
+                  backgroundColor: const Color.fromARGB(255, 9, 63, 66),
                   child: const Text(
                     "To Rent",
                     style: TextStyle(

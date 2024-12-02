@@ -106,9 +106,10 @@ class _ListingScreenState extends State<ListingScreen> {
                       widget.listing.price,
                       style: const TextStyle(fontSize: 36),
                     ),
-                    const Icon(Icons.share_outlined),
+                    Image.asset("assets/share.png"),
                     GestureDetector(
                       child: Icon(
+                        size: 31,
                         heartIcon,
                         color: heartColor,
                       ),
@@ -170,10 +171,17 @@ class _ListingScreenState extends State<ListingScreen> {
                       child: Row(
                         children: [
                           for (int i = 0; i < widget.listing.rating; i++)
-                            const Image(
-                              image: AssetImage("assets/spark.png"),
-                              height: 22,
-                              width: 22,
+                            const Row(
+                              children: [
+                                Image(
+                                  image: AssetImage("assets/star.png"),
+                                  height: 22,
+                                  width: 22,
+                                ),
+                                SizedBox(
+                                  width: 3,
+                                ),
+                              ],
                             )
                         ],
                       ),

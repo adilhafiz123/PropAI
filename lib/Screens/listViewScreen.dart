@@ -57,7 +57,7 @@ class _ListScreenState extends State<ListScreen> {
         (await getListOfUrlsAndIds(topLevelUrl)).toSet().toList();
 
     ////////////////////////////////////////////////////////////////////////////
-    const howManyProperties = 1;
+    const howManyProperties = 10;
     ////////////////////////////////////////////////////////////////////////////
 
     var model = createGeminiModel(); //Only do if >1 propFromGemini
@@ -225,13 +225,29 @@ Widget buildCard(Listing listing) {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                const SizedBox(
+                  height: 4,
+                ),
                 Row(
                   children: [
-                    for (int i = 0; i < listing.rating; i++)
+                    for (int i = 1; i < listing.rating; i++)
+                      const Row(
+                        children: [
+                          Image(
+                            image: AssetImage("assets/star.png"),
+                            height: 18,
+                            width: 18,
+                          ),
+                          SizedBox(
+                            width: 3,
+                          ),
+                        ],
+                      ),
+                    if (listing.rating - listing.rating.floor() > 0)
                       const Image(
-                        image: AssetImage("assets/spark.png"),
-                        height: 22,
-                        width: 22,
+                        image: AssetImage("assets/half_star.png"),
+                        height: 18,
+                        width: 18,
                       ),
                     const SizedBox(
                       width: 8,
@@ -281,24 +297,23 @@ Widget buildCard(Listing listing) {
                     // ),
                   ],
                 ),
-                const Divider(
-                  height: 12,
+                const SizedBox(
+                  height: 10,
                 ),
                 Text(
                   listing.headline,
                   style: const TextStyle(
                       fontSize: 14, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(width: 140, child: Text(listing.address)),
-                const SizedBox(
-                  height: 16,
-                ),
-                const Wrap(
-                  spacing: 22,
+                SizedBox(width: 140, height: 65, child: Text(listing.address)),
+                Row(
                   children: [
-                    Icon(Icons.send_rounded),
-                    Icon(Icons.phone),
-                    Icon(Icons.favorite_border_outlined)
+                    const SizedBox(width: 12),
+                    Image.asset("assets/send.png"),
+                    const SizedBox(width: 24),
+                    Image.asset("assets/telephone.png"),
+                    const SizedBox(width: 24),
+                    Image.asset("assets/heart.png"),
                   ],
                 ),
               ],
