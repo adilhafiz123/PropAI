@@ -43,8 +43,24 @@ class _ListScreenState extends State<ListScreen> {
   Future<List<Listing>> buildListingsAsync(String postcode) async {
     List<Listing> listings = List.empty(growable: true);
 
+    // Cheat codes
     if (postcode == "firebase") {
       return await DatabaseService().getAllProperties();
+    }
+
+    var model = createGeminiModel(); //Only do if >1 propFromGemini
+    ChatSession chat = await startGeminiChat(model);
+    /*int setupTokenCount = */ await setupGeminiChat(chat, model);
+
+    // Test Code: Remove me
+    if (postcode.length == 9) {
+      final property = await scrapeRightmoveProperty(
+          "https://www.rightmove.co.uk/properties/$postcode#/?channel=RES_BUY");
+      Future<Listing> listingFuture =
+          buildListingFromGemini(chat, property, "areaSummary");
+      var list = List<Future<Listing>>.empty(growable: true);
+      list.add(listingFuture);
+      return Future.wait(list);
     }
 
     var outcode = extractOutcode(postcode);
@@ -60,9 +76,6 @@ class _ListScreenState extends State<ListScreen> {
     const howManyProperties = 10;
     ////////////////////////////////////////////////////////////////////////////
 
-    var model = createGeminiModel(); //Only do if >1 propFromGemini
-    ChatSession chat = await startGeminiChat(model);
-    /*int setupTokenCount = */ await setupGeminiChat(chat, model);
     String? areaSummary = await DatabaseService().getAreaSummary(outcode);
     if (areaSummary == null) {
       areaSummary = await sendGeminiText(chat,

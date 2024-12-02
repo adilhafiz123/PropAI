@@ -32,7 +32,8 @@ Future<GenerateContentResponse> sendGeminiTextAndImages(
   final prompt = TextPart(msg);
   final imageParts = [
     for (int i = 0; i < imageUrls.length; i++)
-      DataPart('image/jpeg', await bytesFromImageUrl(imageUrls[i]))
+      if (imageUrls[i] != "")
+        DataPart('image/jpeg', await bytesFromImageUrl(imageUrls[i]))
   ];
 
   final content = Content.multi([prompt, ...imageParts]);
@@ -88,7 +89,7 @@ Future<ChatSession> startGeminiChat(GenerativeModel model) async {
 
 Future<int> setupGeminiChat(ChatSession chat, GenerativeModel model) async {
   String setup =
-      r'''I will provide you with multiple Property Listing description and images. Create an objective set of
+      r'''I will provide you with multiple Property Listing descriptions, images and floorplans. Create an objective set of
         of positive bullet points and negative bullet points and gold star bullet point rating out of 5 for different 
         aspects. Don't mention lease tenure. Output should be a single JSON with three fields like this:
         {
@@ -101,7 +102,7 @@ Future<int> setupGeminiChat(ChatSession chat, GenerativeModel model) async {
                       * Location:  
                       * Overall:",
 
-          "SquareFootage" : 600 sqft
+          "SquareFootage" : 600 sqft [string]
           "OverallRating": 3.5 [double]
         }''';
   /*String setupResponse = */ await sendGeminiText(chat, setup);
@@ -113,8 +114,10 @@ Future<int> setupGeminiChat(ChatSession chat, GenerativeModel model) async {
 Future<Listing> buildListingFromGemini(ChatSession chat,
     Map<String, dynamic> property, String geminiAreaSummary) async {
   String textInput = createGeminiInput(property);
+  List<String> imagePaths = property['images'];
+  imagePaths.add(property['floorplanPath']);
   GenerateContentResponse response =
-      await sendGeminiTextAndImages(chat, textInput, property['images']);
+      await sendGeminiTextAndImages(chat, textInput, imagePaths);
 
   String responseText = response.text.toString();
   var jsonObj = jsonDecode(responseText.substring(8, responseText.length - 4));
@@ -137,7 +140,9 @@ Future<Listing> buildListingFromGemini(ChatSession chat,
       property['type'] ?? "",
       property['bedrooms'] ?? "",
       property['bathrooms'] ?? "",
-      property['sqft'] ?? jsonObj['SquareFootage'] ?? "Ask Agent",
+      (property['sqft'] == null || property['sqft'] == "Ask agent")
+          ? jsonObj['SquareFootage'].toString()
+          : property['sqft'],
       property['images'] ?? List.empty(),
       property['floorplanPath'] ?? "",
       geminiSummary,
