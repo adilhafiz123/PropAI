@@ -43,6 +43,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text(
           "Adil's App",
@@ -65,7 +66,6 @@ class _HomeState extends State<Home> {
               controller: myController,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                focusColor: Colors.green,
                 hintText: 'Enter postcode',
               )),
         ),

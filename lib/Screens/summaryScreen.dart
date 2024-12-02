@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-//import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:my_flutter_application/Classes/ListingClass.dart';
 
 class ListingScreen extends StatefulWidget {
@@ -317,7 +317,7 @@ class _ListingScreenState extends State<ListingScreen> {
                     child: Row(
                       children: [
                         const SizedBox(
-                          width: 70,
+                          width: 80,
                         ),
                         SizedBox(
                           height: 25,
@@ -326,7 +326,7 @@ class _ListingScreenState extends State<ListingScreen> {
                           ),
                         ),
                         const SizedBox(
-                          width: 15,
+                          width: 10,
                         ),
                         const Text("About the area",
                             style: TextStyle(
@@ -359,6 +359,28 @@ class _ListingScreenState extends State<ListingScreen> {
                     },
                   ),
                 ),
+                OutlinedButton(
+                    child: Row(
+                      children: [
+                        const SizedBox(
+                          width: 60,
+                        ),
+                        SizedBox(
+                            height: 25,
+                            child: Image.asset("assets/rightmove.png")),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        const Text("View on Rightmove",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w600)),
+                        const SizedBox(
+                          width: 15,
+                        ),
+                      ],
+                    ),
+                    onPressed: () async =>
+                        await launchUrl(Uri.parse(widget.listing.url))),
                 const SizedBox(
                   height: 20,
                 ),

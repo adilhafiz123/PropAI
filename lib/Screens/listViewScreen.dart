@@ -66,7 +66,7 @@ class _ListScreenState extends State<ListScreen> {
     String? areaSummary = await DatabaseService().getAreaSummary(outcode);
     if (areaSummary == null) {
       areaSummary = await sendGeminiText(chat,
-          "Tell me what I need to know about the $postcode area if I am considering moving there");
+          "Tell me what I need to know about the $postcode UK postcode area if I am considering moving there");
       DatabaseService().updateAreaSummary(outcode, areaSummary);
     }
 
@@ -150,7 +150,7 @@ class _ListScreenState extends State<ListScreen> {
             listings = snapshot.data!;
             mapViewButtonEnabled = true;
             return ListView.builder(
-                itemCount: listings.length + 1,
+                itemCount: listings.length + 2,
                 itemBuilder: (BuildContext context, int index) {
                   if (index == 0) {
                     return Padding(
@@ -162,19 +162,26 @@ class _ListScreenState extends State<ListScreen> {
                       ),
                     );
                   }
-                  final listing = listings[index - 1];
 
-                  return Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: GestureDetector(
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ListingScreen(listing)),
+                  if (index > 0 && index < listings.length + 1) {
+                    final listing = listings[index - 1];
+                    return Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: GestureDetector(
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ListingScreen(listing)),
+                        ),
+                        child: buildCard(listing),
                       ),
-                      child: buildCard(listing),
-                    ),
-                  );
+                    );
+                  }
+                  // Space at the end to not hide behind the Map View button
+                  if (index == listings.length + 1) {
+                    return const SizedBox(height: 80);
+                  }
+                  return null;
                 });
           },
         ));
@@ -220,7 +227,7 @@ Widget buildCard(Listing listing) {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 2),
+            padding: const EdgeInsets.only(left: 8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -300,10 +307,13 @@ Widget buildCard(Listing listing) {
                 const SizedBox(
                   height: 10,
                 ),
-                Text(
-                  listing.headline,
-                  style: const TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.bold),
+                SizedBox(
+                  width: 155,
+                  child: Text(
+                    listing.headline,
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.bold),
+                  ),
                 ),
                 SizedBox(width: 140, height: 65, child: Text(listing.address)),
                 Row(

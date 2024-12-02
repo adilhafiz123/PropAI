@@ -119,7 +119,7 @@ Future<Listing> buildListingFromGemini(ChatSession chat,
   String responseText = response.text.toString();
   var jsonObj = jsonDecode(responseText.substring(8, responseText.length - 4));
   String geminiSummary = jsonObj['Summary'];
-  double overallRating = jsonObj['OverallRating'];
+  double overallRating = jsonObj['OverallRating'] as double;
 
   int inputTokenCount = response.usageMetadata?.promptTokenCount ?? 0;
   int outputTokenCount = response.usageMetadata?.candidatesTokenCount ?? 0;
