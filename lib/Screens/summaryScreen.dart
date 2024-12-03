@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:my_flutter_application/Classes/ListingClass.dart';
 
@@ -17,14 +19,21 @@ class _ListingScreenState extends State<ListingScreen> {
   final List<File> _images = [];
 
   late PageController pageViewController;
-
+  late GoogleMapController mapController;
+  late Future<List<Location>> futureLocation;
   IconData heartIcon = Icons.favorite_outline;
   Color heartColor = Colors.black;
 
   @override
   void initState() {
     super.initState();
+    futureLocation =
+        locationFromAddress("${widget.listing.address}, United Kingdom");
     pageViewController = PageController();
+  }
+
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
   }
 
   @override
@@ -146,9 +155,9 @@ class _ListingScreenState extends State<ListingScreen> {
                 const SizedBox(
                   height: 16,
                 ),
-                Wrap(
-                  alignment: WrapAlignment.spaceAround,
+                Row(
                   children: [
+                    const SizedBox(width: 20),
                     SizedBox(
                       width: 120,
                       child: Row(
@@ -166,8 +175,9 @@ class _ListingScreenState extends State<ListingScreen> {
                         ],
                       ),
                     ),
+                    const SizedBox(width: 75),
                     SizedBox(
-                      width: 110,
+                      width: 125,
                       child: Row(
                         children: [
                           for (int i = 0; i < widget.listing.rating; i++)
@@ -309,55 +319,111 @@ class _ListingScreenState extends State<ListingScreen> {
                                   fontFamily: "Nunito",
                                   fontWeight: FontWeight.w900))))),
                 ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    child: SizedBox(
+                        height: 200,
+                        width: 200,
+                        child: FutureBuilder(
+                            future: futureLocation,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState !=
+                                  ConnectionState.done) {
+                                return const Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Center(
+                                        child: Text(
+                                          "Loading Map...",
+                                          style:
+                                              TextStyle(fontFamily: "Nunito"),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 30,
+                                      ),
+                                      Center(
+                                        child: CircularProgressIndicator(
+                                          color: Color.fromARGB(255, 9, 63, 66),
+                                        ),
+                                      )
+                                    ]); // Loading indicator
+                              }
+                              if (snapshot.hasError) {
+                                return Text(
+                                    'Error: ${snapshot.error}\n\nStack Trace:\n${snapshot.stackTrace}'); // Handle error
+                              }
+                              final location = snapshot.data?[0] as Location;
+                              final latLng =
+                                  LatLng(location.latitude, location.longitude);
+                              return GoogleMap(
+                                onMapCreated: _onMapCreated,
+                                zoomControlsEnabled: false,
+                                initialCameraPosition: CameraPosition(
+                                  target: latLng,
+                                  zoom: 14.0,
+                                ),
+                                markers: {
+                                  Marker(
+                                    markerId: MarkerId(widget.listing.id),
+                                    position: latLng,
+                                  )
+                                },
+                              );
+                            })),
+                  ),
+                ),
                 const SizedBox(
                   height: 20,
                 ),
-                SizedBox(
-                  child: OutlinedButton(
-                    child: Row(
-                      children: [
-                        const SizedBox(
-                          width: 80,
+                OutlinedButton(
+                  child: Row(
+                    children: [
+                      const SizedBox(
+                        width: 80,
+                      ),
+                      SizedBox(
+                        height: 25,
+                        child: Image.asset(
+                          "assets/neighborhood.png",
                         ),
-                        SizedBox(
-                          height: 25,
-                          child: Image.asset(
-                            "assets/neighborhood.png",
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        const Text("About the area",
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600)),
-                      ],
-                    ),
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                                title: Row(
-                                  children: [
-                                    const SizedBox(width: 35),
-                                    Image.asset("assets/neighborhood.png"),
-                                    const SizedBox(width: 15),
-                                    const Text(
-                                      "Area Summary",
-                                      style: TextStyle(
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                                scrollable: true,
-                                content: MarkdownBody(
-                                    data: widget.listing.geminiAreaSummary),
-                                insetPadding: const EdgeInsets.only(
-                                    right: 10, left: 10, top: 20, bottom: 60),
-                              ));
-                    },
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      const Text("About the area",
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w600)),
+                    ],
                   ),
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                              title: Row(
+                                children: [
+                                  const SizedBox(width: 35),
+                                  Image.asset("assets/neighborhood.png"),
+                                  const SizedBox(width: 15),
+                                  const Text(
+                                    "Area Summary",
+                                    style: TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
+                              scrollable: true,
+                              content: MarkdownBody(
+                                  data: widget.listing.geminiAreaSummary),
+                              insetPadding: const EdgeInsets.only(
+                                  right: 10, left: 10, top: 20, bottom: 60),
+                            ));
+                  },
                 ),
                 OutlinedButton(
                     child: Row(
