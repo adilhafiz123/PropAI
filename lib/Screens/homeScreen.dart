@@ -11,7 +11,7 @@ Future<void> main() async {
 
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    theme: ThemeData(fontFamily: "FigTree", primaryColor: Colors.green),
+    theme: ThemeData(fontFamily: "FigTree"),
     home: const Home(),
     //home: const ListScreen(true, "E14"),
     navigatorKey: navigatorKey, // Setting a global key for navigator

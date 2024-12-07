@@ -1,3 +1,23 @@
+import 'package:flutter/material.dart';
+import 'package:my_flutter_application/Screens/imageViewerScreen.dart';
+
+Widget buildImageWidget(String filename, bool onTouch, BuildContext context,
+    List<String> imagePaths) {
+  return GestureDetector(
+    onTap: () => !onTouch
+        ? null
+        : Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ImageViewerScreen(imagePaths)),
+          ),
+    child: ClipRRect(
+        borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+        child: SizedBox(width: 352, child: Image.network(filename))),
+  );
+}
+
 String extractOutcode(String postcode) {
   // Remove any spaces and convert to uppercase
   String cleanedPostcode = postcode.replaceAll(' ', '').toUpperCase();

@@ -99,9 +99,11 @@ Future<int> setupGeminiChat(ChatSession chat, GenerativeModel model) async {
                       ### **Watch Out For**
                       - High Service Charge
                       ### **Ratings**
-                      * Location:  
-                      * Overall:",
-
+                      * Location: ⭐⭐⭐⭐  
+                      * Size: ⭐⭐⭐⭐⭐
+                      * Amenities: ⭐⭐
+                      * Finishes/Quality: ⭐⭐⭐⭐
+                      * Overall: ⭐⭐⭐⭐ 
           "SquareFootage" : 600 sqft [string]
           "OverallRating": 3.5 [double]
         }''';
@@ -115,7 +117,9 @@ Future<Listing> buildListingFromGemini(ChatSession chat,
     Map<String, dynamic> property, String geminiAreaSummary) async {
   String textInput = createGeminiInput(property);
   List<String> imagePaths = property['images'];
-  imagePaths.add(property['floorplanPath']);
+  if (property['floorplanPath'] != null && property['floorplanPath'] != "") {
+    imagePaths.add(property['floorplanPath']);
+  }
   GenerateContentResponse response =
       await sendGeminiTextAndImages(chat, textInput, imagePaths);
 

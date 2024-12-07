@@ -128,7 +128,7 @@ class _ListScreenState extends State<ListScreen> {
                   ? Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => MapView(listings)))
+                          builder: (context) => MapView(listings, true)))
                   : null,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,

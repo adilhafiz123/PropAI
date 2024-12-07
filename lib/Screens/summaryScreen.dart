@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:my_flutter_application/Screens/mapViewScreen.dart';
+import 'package:my_flutter_application/helperFunctions.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:my_flutter_application/Classes/ListingClass.dart';
 
@@ -54,19 +56,12 @@ class _ListingScreenState extends State<ListingScreen> {
     }
   }
 
-  Widget buildImageWidget(String filename) {
-    return ClipRRect(
-        borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-        child: Image.network(filename));
-  }
-
   Widget buildFloorPlanDialog(path) {
     return Dialog(
-      insetPadding: const EdgeInsets.only(right: 15, left: 15),
+      insetPadding: const EdgeInsets.all(10),
       child: ClipRRect(
           borderRadius: const BorderRadius.all(Radius.circular(10)),
-          child: SizedBox(width: 400, child: Image.network(path))),
+          child: InteractiveViewer(child: Image.network(path))),
     );
   }
 
@@ -92,11 +87,13 @@ class _ListingScreenState extends State<ListingScreen> {
                       height: 300,
                       child: ListView(
                         scrollDirection: Axis.horizontal,
+                        physics: const PageScrollPhysics(),
                         children: [
                           for (int i = 0;
                               i < widget.listing.imagePaths.length;
                               i++)
-                            buildImageWidget(widget.listing.imagePaths[i]),
+                            buildImageWidget(widget.listing.imagePaths[i], true,
+                                context, widget.listing.imagePaths),
                         ],
                       )),
                   Align(
@@ -149,7 +146,7 @@ class _ListingScreenState extends State<ListingScreen> {
                   padding: const EdgeInsets.only(left: 15),
                   child: Text(
                     widget.listing.address,
-                    style: const TextStyle(fontSize: 18),
+                    style: const TextStyle(fontSize: 17),
                   ),
                 ),
                 const SizedBox(
@@ -361,6 +358,11 @@ class _ListingScreenState extends State<ListingScreen> {
                               final latLng =
                                   LatLng(location.latitude, location.longitude);
                               return GoogleMap(
+                                onTap: (argument) => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            MapView([widget.listing], false))),
                                 onMapCreated: _onMapCreated,
                                 zoomControlsEnabled: false,
                                 initialCameraPosition: CameraPosition(
@@ -477,7 +479,8 @@ class _ListingScreenState extends State<ListingScreen> {
                             for (int i = 0;
                                 i < widget.listing.imagePaths.length;
                                 i++)
-                              buildImageWidget(widget.listing.imagePaths[i]),
+                              buildImageWidget(widget.listing.imagePaths[i],
+                                  true, context, widget.listing.imagePaths),
                           ],
                         )),
                     Align(

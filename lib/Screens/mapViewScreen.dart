@@ -7,9 +7,10 @@ import 'package:my_flutter_application/Classes/ListingClass.dart';
 import 'package:my_flutter_application/Screens/summaryScreen.dart';
 
 class MapView extends StatefulWidget {
-  const MapView(this.listings, {super.key});
+  const MapView(this.listings, this.showListViewButton, {super.key});
 
   final List<Listing> listings;
+  final bool showListViewButton;
 
   @override
   State<MapView> createState() => _MapViewState();
@@ -65,23 +66,26 @@ class _MapViewState extends State<MapView> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: SizedBox(
         width: 180,
-        child: FloatingActionButton(
-            backgroundColor: const Color.fromARGB(255, 9, 63, 66),
-            foregroundColor: Colors.white,
-            onPressed: () => Navigator.pop(context),
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.list_rounded),
-                SizedBox(
-                  width: 8,
-                ),
-                Text(
-                  "List View",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-                ),
-              ],
-            )),
+        child: (!widget.showListViewButton)
+            ? null
+            : FloatingActionButton(
+                backgroundColor: const Color.fromARGB(255, 9, 63, 66),
+                foregroundColor: Colors.white,
+                onPressed: () => Navigator.pop(context),
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.list_rounded),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Text(
+                      "List View",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                )),
       ),
       body: FutureBuilder(
         future: Future.wait(futureLocationsList),
