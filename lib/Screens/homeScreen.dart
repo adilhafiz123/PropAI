@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:my_flutter_application/Screens/listViewScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:my_flutter_application/Classes/FilterClass.dart';
+import 'package:my_flutter_application/Screens/listViewScreen.dart';
 import 'package:my_flutter_application/Firebase/firebase_options.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
@@ -11,10 +12,19 @@ Future<void> main() async {
 
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    theme: ThemeData(fontFamily: "FigTree"),
+    theme: ThemeData(
+      fontFamily: "FigTree",
+      inputDecorationTheme: const InputDecorationTheme(
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Color.fromARGB(255, 220, 220, 220)),
+        ),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Color.fromARGB(255, 220, 220, 220)),
+        ),
+      ),
+    ),
     home: const Home(),
-    //home: const ListScreen(true, "E14"),
-    navigatorKey: navigatorKey, // Setting a global key for navigator
+    navigatorKey: navigatorKey,
   ));
 }
 
@@ -27,6 +37,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final myController = TextEditingController();
+  Filter filter = Filter();
 
   @override
   void initState() {
@@ -57,15 +68,17 @@ class _HomeState extends State<Home> {
             child: Text("Enter Postcode",
                 style: TextStyle(
                     color: Color.fromARGB(255, 14, 60, 40),
-                    fontSize: 34,
+                    fontSize: 30,
                     fontWeight: FontWeight.bold,
                     fontFamily: "Lato"))),
         Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(8),
           child: TextField(
               controller: myController,
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
               decoration: const InputDecoration(
-                border: OutlineInputBorder(),
+                enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
                 hintText: 'Enter postcode',
               )),
         ),
@@ -75,12 +88,16 @@ class _HomeState extends State<Home> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: FloatingActionButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                        6.0), // Adjust the radius as needed
+                  ),
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              ListScreen(true, myController.text)),
+                              ListScreen(true, myController.text, filter)),
                     );
                   },
                   backgroundColor: const Color.fromARGB(255, 9, 63, 66),
@@ -98,12 +115,16 @@ class _HomeState extends State<Home> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: FloatingActionButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                        6.0), // Adjust the radius as needed
+                  ),
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
-                              ListScreen(false, myController.text)),
+                              ListScreen(false, myController.text, filter)),
                     );
                   },
                   backgroundColor: const Color.fromARGB(255, 9, 63, 66),
@@ -119,20 +140,230 @@ class _HomeState extends State<Home> {
             ),
           ],
         ),
-        // const SizedBox(height: 30),
-        // IconButton(
-        //   icon: Image.asset('assets/firebase.png'),
-        //   iconSize: 50,
-        //   onPressed: () {
-        //     Navigator.push(
-        //       context,
-        //       MaterialPageRoute(
-        //           builder: (context) => const ListScreen(false, "firebase")),
-        //     );
-        //   },
-        // ),
-        const SizedBox(height: 30),
-        Image.asset("assets/houses.png")
+        const SizedBox(
+          height: 10,
+        ),
+        Padding(
+            padding: const EdgeInsets.all(2.0),
+            child: Column(children: [
+              // Search Radius Dropdown
+              const Row(children: [
+                SizedBox(width: 10),
+                Text("Search radius",
+                    style: TextStyle(color: Color.fromARGB(255, 87, 87, 87)))
+              ]),
+              SizedBox(
+                height: 60,
+                width: 335,
+                child: DropdownButtonFormField<String>(
+                  value: filter.searchRadius,
+                  items: filter.searchRadii.keys.map((value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value,
+                          style: const TextStyle(fontWeight: FontWeight.w600)),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      filter.searchRadius = value!;
+                    });
+                  },
+                ),
+              ),
+
+              // Bedrooms Dropdown
+              const Row(children: [
+                SizedBox(width: 10),
+                Text("Bedrooms",
+                    style: TextStyle(color: Color.fromARGB(255, 87, 87, 87)))
+              ]),
+              Row(
+                children: [
+                  const SizedBox(width: 10),
+                  SizedBox(
+                    height: 60,
+                    width: 155,
+                    child: DropdownButtonFormField<String>(
+                      value: filter.bedroomsMin,
+                      items: filter.minBedrooms.keys.map((value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w600)),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          filter.bedroomsMin = value!;
+                        });
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  SizedBox(
+                    height: 60,
+                    width: 155,
+                    child: DropdownButtonFormField<String>(
+                      value: filter.bedroomsMax,
+                      items: filter.maxBedrooms.keys.map((value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w600)),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          filter.bedroomsMax = value!;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+
+              // Price Range Dropdown
+              const Row(children: [
+                SizedBox(width: 10),
+                Text("Price range",
+                    style: TextStyle(color: Color.fromARGB(255, 87, 87, 87)))
+              ]),
+              Row(
+                children: [
+                  const SizedBox(width: 10),
+                  SizedBox(
+                    height: 60,
+                    width: 155,
+                    child: DropdownButtonFormField<String>(
+                      value: filter.minPrice,
+                      items: filter.minPrices.keys.map((value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w600)),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          filter.minPrice = value!;
+                        });
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  SizedBox(
+                    height: 60,
+                    width: 155,
+                    child: DropdownButtonFormField<String>(
+                      value: filter.maxPrice,
+                      items: filter.maxPrices.keys.map((value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w600)),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          filter.maxPrice = value!;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              // // Bathrooms Dropdown
+              // const Row(children: [
+              //   SizedBox(width: 10),
+              //   Text("Bathrooms",
+              //       style: TextStyle(color: Color.fromARGB(255, 119, 119, 121)))
+              // ]),
+              // Row(
+              //   children: [
+              //     const SizedBox(width: 10),
+              //     SizedBox(
+              //       height: 60,
+              //       width: 155,
+              //       child: DropdownButtonFormField<String>(
+              //         value: filter.bathroomsMin,
+              //         items: ["1", "2", "3", "4", "5", "No min"].map((value) {
+              //           return DropdownMenuItem<String>(
+              //             value: value,
+              //             child: Text(value,
+              //                 style:
+              //                     const TextStyle(fontWeight: FontWeight.w600)),
+              //           );
+              //         }).toList(),
+              //         onChanged: (value) {
+              //           setState(() {
+              //             filter.bathroomsMin = value!;
+              //           });
+              //         },
+              //       ),
+              //     ),
+              //     const SizedBox(width: 20),
+              //     SizedBox(
+              //       height: 60,
+              //       width: 155,
+              //       child: DropdownButtonFormField<String>(
+              //         value: filter.bathroomsMax,
+              //         items: ["1", "2", "3", "4", "5", "No max"].map((value) {
+              //           return DropdownMenuItem<String>(
+              //             value: value,
+              //             child: Text(value,
+              //                 style:
+              //                     const TextStyle(fontWeight: FontWeight.w600)),
+              //           );
+              //         }).toList(),
+              //         onChanged: (value) {
+              //           setState(() {
+              //             filter.bathroomsMax = value!;
+              //           });
+              //         },
+              //       ),
+              //     ),
+              //   ],
+              // ),
+
+              // Property Type
+              const Row(children: [
+                SizedBox(width: 10),
+                Text("Property Type",
+                    style: TextStyle(color: Color.fromARGB(255, 87, 87, 87)))
+              ]),
+              Row(
+                children: [
+                  const SizedBox(width: 10),
+                  SizedBox(
+                    height: 60,
+                    width: 326,
+                    child: DropdownButtonFormField<String>(
+                      value: filter.propertyType,
+                      items: filter.propertyTypes.keys.map((value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value,
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w600)),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          filter.propertyType = value!;
+                        });
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                ],
+              ),
+            ])),
+        //Image.asset("assets/houses.png")
       ]),
     );
   }

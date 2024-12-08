@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:my_flutter_application/Classes/FilterClass.dart';
 import 'package:my_flutter_application/Screens/mapViewScreen.dart';
 import 'package:my_flutter_application/LLMs/gemini.dart';
 import 'package:my_flutter_application/Scraper/rightmoveScraper.dart';
@@ -13,10 +14,11 @@ import 'package:my_flutter_application/helperFunctions.dart';
 import "summaryScreen.dart";
 
 class ListScreen extends StatefulWidget {
-  const ListScreen(this.isSale, this.postcode, {super.key});
+  const ListScreen(this.isSale, this.postcode, this.filter, {super.key});
 
   final bool isSale;
   final String postcode;
+  final Filter filter;
 
   @override
   State<ListScreen> createState() => _ListScreenState(isSale, postcode);
@@ -68,12 +70,12 @@ class _ListScreenState extends State<ListScreen> {
     var code = outcodeMap[outcode];
     var saleOrRentString = isSale ? "property-for-sale" : "property-to-rent";
     var topLevelUrl =
-        "https://www.rightmove.co.uk/$saleOrRentString/find.html?locationIdentifier=OUTCODE%5E$code&numberOfPropertiesPerPage=24&sortType=6&radius=0.0&index=0&includeSSTC=false&viewType=LIST&channel=BUY&areaSizeUnit=sqft&currencyCode=GBP&isFetching=false&searchLocation=$outcode&useLocationIdentifier=true&previousSearchLocation=null";
+        "https://www.rightmove.co.uk/$saleOrRentString/find.html?locationIdentifier=OUTCODE%5E$code&radius=${widget.filter.searchRadii[widget.filter.searchRadius]}&minPrice=${widget.filter.minPrices[widget.filter.minPrice]}&maxPrice=${widget.filter.maxPrices[widget.filter.maxPrice]}&minBedrooms=${widget.filter.minBedrooms[widget.filter.bedroomsMin]}&maxBedrooms=${widget.filter.maxBedrooms[widget.filter.bedroomsMax]}&propertyTypes=${widget.filter.propertyTypes[widget.filter.propertyType]}&numberOfPropertiesPerPage=24&sortType=6&radius=0.0&index=0&includeSSTC=false&viewType=LIST&channel=BUY&areaSizeUnit=sqft&currencyCode=GBP&isFetching=false&searchLocation=$outcode&useLocationIdentifier=true&previousSearchLocation=null";
     final urlsAndIds =
         (await getListOfUrlsAndIds(topLevelUrl)).toSet().toList();
 
     ////////////////////////////////////////////////////////////////////////////
-    const howManyProperties = 10;
+    const howManyProperties = 20;
     ////////////////////////////////////////////////////////////////////////////
 
     String? areaSummary = await DatabaseService().getAreaSummary(outcode);
@@ -84,7 +86,7 @@ class _ListScreenState extends State<ListScreen> {
     }
 
     var rng = Random();
-    for (int i = 0; i < howManyProperties; i++) {
+    for (int i = 0; i < min(howManyProperties, urlsAndIds[0].length); i++) {
       var url = urlsAndIds[0][
           i]; //https://www.rightmove.co.uk/properties/154985657#/?channel=RES_LET";
       var id = urlsAndIds[1][i]; //"154985657"
@@ -153,7 +155,7 @@ class _ListScreenState extends State<ListScreen> {
               return const Center(
                   child: CircularProgressIndicator(
                 color: Color.fromARGB(255, 9, 63, 66),
-              )); // Loading indicator
+              ));
             }
             if (snapshot.hasError) {
               return Text(
@@ -207,7 +209,7 @@ Widget buildCard(Listing listing) {
     child: Card(
       elevation: 5,
       color: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6.0)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
       child: Row(
         children: [
           Column(
@@ -254,29 +256,34 @@ Widget buildCard(Listing listing) {
                       const Row(
                         children: [
                           Image(
-                            image: AssetImage("assets/star.png"),
-                            height: 18,
-                            width: 18,
+                            image: AssetImage("assets/gold.png"),
+                            // image: listing.rating > 4
+                            //     ? const AssetImage("assets/gold.png")
+                            //     : listing.rating > 3
+                            //         ? const AssetImage("assets/silver.png")
+                            //         : const AssetImage("assets/bronze.png"),
+                            height: 16,
+                            width: 16,
                           ),
                           SizedBox(
                             width: 3,
                           ),
                         ],
                       ),
-                    if (listing.rating - listing.rating.floor() > 0)
-                      const Image(
-                        image: AssetImage("assets/half_star.png"),
-                        height: 18,
-                        width: 18,
-                      ),
+                    // if (listing.rating - listing.rating.floor() > 0)
+                    //   const Image(
+                    //     image: AssetImage("assets/half_star.png"),
+                    //     height: 18,
+                    //     width: 18,
+                    //   ),
                     const SizedBox(
                       width: 8,
                     ),
-                    SizedBox(
-                        height: 20,
-                        child: listing.fromFirebase
-                            ? Image.asset("assets/firebase.png")
-                            : Image.asset("assets/gemini.png")),
+                    // SizedBox(
+                    //     height: 20,
+                    //     child: listing.fromFirebase
+                    //         ? Image.asset("assets/firebase.png")
+                    //         : Image.asset("assets/gemini.png")),
                     // Container(
                     //   width: 27.0,
                     //   height: 27.0,
@@ -318,7 +325,7 @@ Widget buildCard(Listing listing) {
                   ],
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 8,
                 ),
                 SizedBox(
                   width: 155,
@@ -329,14 +336,16 @@ Widget buildCard(Listing listing) {
                   ),
                 ),
                 SizedBox(width: 140, height: 65, child: Text(listing.address)),
+                const SizedBox(height: 8),
                 Row(
                   children: [
-                    const SizedBox(width: 12),
-                    Image.asset("assets/send.png"),
-                    const SizedBox(width: 24),
-                    Image.asset("assets/telephone.png"),
-                    const SizedBox(width: 24),
-                    Image.asset("assets/heart.png"),
+                    const SizedBox(width: 10),
+                    SizedBox(width: 20, child: Image.asset("assets/send.png")),
+                    const SizedBox(width: 30),
+                    SizedBox(
+                        width: 20, child: Image.asset("assets/telephone.png")),
+                    const SizedBox(width: 30),
+                    SizedBox(width: 20, child: Image.asset("assets/heart.png")),
                   ],
                 ),
               ],
