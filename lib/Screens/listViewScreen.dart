@@ -124,6 +124,10 @@ class _ListScreenState extends State<ListScreen> {
         floatingActionButton: SizedBox(
           width: 180,
           child: FloatingActionButton(
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.circular(6.0), // Adjust the radius as needed
+              ),
               backgroundColor: const Color.fromARGB(255, 9, 63, 66),
               foregroundColor: Colors.white,
               onPressed: () => mapViewButtonEnabled
@@ -164,40 +168,69 @@ class _ListScreenState extends State<ListScreen> {
 
             listings = snapshot.data!;
             mapViewButtonEnabled = true;
-            return ListView.builder(
-                itemCount: listings.length + 2,
-                itemBuilder: (BuildContext context, int index) {
-                  if (index == 0) {
-                    return Padding(
-                      padding:
-                          const EdgeInsets.only(bottom: 6, top: 6, left: 8),
-                      child: Text(
-                        "${listings.length} results",
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    );
-                  }
+            return Column(
+              children: [
+                // ListView with results
+                Expanded(
+                  // Ensures ListView takes only the remaining vertical space
+                  child: ListView.builder(
+                    itemCount: listings.length + 2,
+                    itemBuilder: (BuildContext context, int index) {
+                      if (index == 0) {
+                        return Padding(
+                          padding:
+                              const EdgeInsets.only(bottom: 6, top: 6, left: 8),
+                          child: Row(
+                            children: [
+                              Text(
+                                "${listings.length} results",
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(width: 250),
+                              GestureDetector(
+                                child: const Icon(
+                                  Icons.sort,
+                                  size: 24,
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    // Sort listings by rating in descending order
+                                    listings.sort(
+                                        (a, b) => b.rating.compareTo(a.rating));
+                                  });
+                                },
+                              ),
+                            ],
+                          ),
+                        );
+                      }
 
-                  if (index > 0 && index < listings.length + 1) {
-                    final listing = listings[index - 1];
-                    return Padding(
-                      padding: const EdgeInsets.all(4.0),
-                      child: GestureDetector(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ListingScreen(listing)),
-                        ),
-                        child: buildCard(listing),
-                      ),
-                    );
-                  }
-                  // Space at the end to not hide behind the Map View button
-                  if (index == listings.length + 1) {
-                    return const SizedBox(height: 80);
-                  }
-                  return null;
-                });
+                      if (index > 0 && index < listings.length + 1) {
+                        final listing = listings[index - 1];
+                        return Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: GestureDetector(
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ListingScreen(listing),
+                              ),
+                            ),
+                            child: buildCard(listing),
+                          ),
+                        );
+                      }
+                      // Space at the end to not hide behind the Map View button
+                      if (index == listings.length + 1) {
+                        return const SizedBox(height: 80);
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+              ],
+            );
           },
         ));
   }
@@ -209,7 +242,7 @@ Widget buildCard(Listing listing) {
     child: Card(
       elevation: 5,
       color: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
       child: Row(
         children: [
           Column(
@@ -218,7 +251,7 @@ Widget buildCard(Listing listing) {
             children: [
               ClipRRect(
                 borderRadius:
-                    const BorderRadius.only(topLeft: Radius.circular(6)),
+                    const BorderRadius.only(topLeft: Radius.circular(5)),
                 child: SizedBox(
                     width: 177,
                     height: 120,
@@ -256,7 +289,7 @@ Widget buildCard(Listing listing) {
                       const Row(
                         children: [
                           Image(
-                            image: AssetImage("assets/gold.png"),
+                            image: AssetImage("assets/black.png"),
                             // image: listing.rating > 4
                             //     ? const AssetImage("assets/gold.png")
                             //     : listing.rating > 3

@@ -75,7 +75,7 @@ class _HomeState extends State<Home> {
           padding: const EdgeInsets.all(8),
           child: TextField(
               controller: myController,
-              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
               decoration: const InputDecoration(
                 enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(5))),

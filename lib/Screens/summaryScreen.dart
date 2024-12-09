@@ -133,7 +133,7 @@ class _ListingScreenState extends State<ListingScreen> {
                   ],
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 6,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 15),
@@ -146,7 +146,7 @@ class _ListingScreenState extends State<ListingScreen> {
                   padding: const EdgeInsets.only(left: 15),
                   child: Text(
                     widget.listing.address,
-                    style: const TextStyle(fontSize: 17),
+                    style: const TextStyle(fontSize: 16),
                   ),
                 ),
                 const SizedBox(
@@ -154,64 +154,33 @@ class _ListingScreenState extends State<ListingScreen> {
                 ),
                 Row(
                   children: [
-                    const SizedBox(width: 20),
+                    const SizedBox(width: 15),
                     SizedBox(
-                      width: 120,
+                      width: 155,
                       child: Row(
                         children: [
                           const Image(
-                            image: AssetImage("assets/house_emoji.png"),
+                            image: AssetImage("assets/home_outline.png"),
                             height: 22,
                             width: 22,
                           ),
                           const SizedBox(width: 10),
                           Text(
                             widget.listing.type,
-                            style: const TextStyle(fontSize: 16),
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w600),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(width: 75),
                     SizedBox(
-                      width: 125,
-                      child: Row(
-                        children: [
-                          for (int i = 0; i < widget.listing.rating; i++)
-                            const Row(
-                              children: [
-                                Image(
-                                  image: AssetImage("assets/star.png"),
-                                  height: 22,
-                                  width: 22,
-                                ),
-                                SizedBox(
-                                  width: 3,
-                                ),
-                              ],
-                            )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-
-                const SizedBox(
-                  height: 16,
-                ),
-                Row(
-                  children: [
-                    const SizedBox(
-                      width: 30,
-                    ),
-                    SizedBox(
-                      width: 60,
+                      width: 120,
                       child: Row(
                         children: [
                           const Image(
-                            image: AssetImage("assets/bed_emoji.png"),
-                            height: 30,
-                            width: 30,
+                            image: AssetImage("assets/bed_outline.png"),
+                            height: 35,
+                            width: 35,
                           ),
                           const SizedBox(width: 10),
                           Text(
@@ -224,15 +193,12 @@ class _ListingScreenState extends State<ListingScreen> {
                         ],
                       ),
                     ),
-                    const SizedBox(
-                      width: 20,
-                    ),
                     SizedBox(
                       width: 60,
                       child: Row(
                         children: [
                           const Image(
-                            image: AssetImage("assets/bath_emoji.PNG"),
+                            image: AssetImage("assets/bath_outline.png"),
                             height: 25,
                             width: 25,
                           ),
@@ -247,12 +213,47 @@ class _ListingScreenState extends State<ListingScreen> {
                         ],
                       ),
                     ),
+                  ],
+                ),
+
+                const SizedBox(
+                  height: 14,
+                ),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 140,
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 15),
+                          for (int i = 0; i < widget.listing.rating; i++)
+                            const Row(
+                              children: [
+                                Image(
+                                  image: AssetImage("assets/black.png"),
+                                  height: 22,
+                                  width: 22,
+                                ),
+                                SizedBox(
+                                  width: 3,
+                                ),
+                              ],
+                            )
+                        ],
+                      ),
+                    ),
                     const SizedBox(
-                      width: 15,
+                      width: 40,
                     ),
                     SizedBox(
-                      width: 160,
+                      width: 155,
                       child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          side: const BorderSide(width: 1),
+                        ),
                         onPressed: () => widget.listing.floorplanPath == ""
                             ? null
                             : showDialog(
@@ -273,7 +274,9 @@ class _ListingScreenState extends State<ListingScreen> {
                                   ? "?"
                                   : "${widget.listing.sqft}",
                               style: const TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w600),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black),
                             )
                           ],
                         ),
@@ -281,30 +284,30 @@ class _ListingScreenState extends State<ListingScreen> {
                     )
                   ],
                 ),
-                const SizedBox(
-                  height: 36,
-                ),
-                const Row(
-                  children: [
-                    SizedBox(
-                      width: 70,
-                    ),
-                    Image(
-                      image: AssetImage("assets/sparkle.png"),
-                      height: 40,
-                      width: 40,
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text("AI Summary",
-                        style: TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.bold)),
-                    SizedBox(
-                      width: 40,
-                    ),
-                  ],
-                ),
+                // const SizedBox(
+                //   height: 36,
+                // ),
+                // const Row(
+                //   children: [
+                //     SizedBox(
+                //       width: 70,
+                //     ),
+                //     Image(
+                //       image: AssetImage("assets/sparkle.png"),
+                //       height: 40,
+                //       width: 40,
+                //     ),
+                //     SizedBox(
+                //       width: 10,
+                //     ),
+                //     Text("AI Summary",
+                //         style: TextStyle(
+                //             fontSize: 22, fontWeight: FontWeight.bold)),
+                //     SizedBox(
+                //       width: 40,
+                //     ),
+                //   ],
+                // ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: MarkdownBody(
@@ -395,7 +398,7 @@ class _ListingScreenState extends State<ListingScreen> {
                         ),
                       ),
                       const SizedBox(
-                        width: 10,
+                        width: 8,
                       ),
                       const Text("About the area",
                           style: TextStyle(
@@ -437,7 +440,7 @@ class _ListingScreenState extends State<ListingScreen> {
                             height: 25,
                             child: Image.asset("assets/rightmove.png")),
                         const SizedBox(
-                          width: 10,
+                          width: 8,
                         ),
                         const Text("View on Rightmove",
                             style: TextStyle(

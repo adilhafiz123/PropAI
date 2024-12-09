@@ -101,11 +101,11 @@ Future<int> setupGeminiChat(ChatSession chat, GenerativeModel model) async {
                       ### **Watch Out For**
                       - High Service Charge
                       ### **Ratings**
-                      * Location: ⭐⭐⭐⭐  
-                      * Size: ⭐⭐⭐⭐⭐
-                      * Amenities: ⭐⭐
-                      * Finishes/Quality: ⭐⭐⭐⭐
-                      * Overall: ⭐⭐⭐⭐ 
+                      * Location: ★★★  
+                      * Size: ★★★★★
+                      * Amenities: ★★
+                      * Finishes/Quality: ★★★★
+                      * Overall: ★★★★ 
           "SquareFootage" : 600 sqft [string]
           "OverallRating": 3.5 [double]
         }''';
