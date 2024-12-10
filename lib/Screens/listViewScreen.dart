@@ -29,7 +29,7 @@ class _ListScreenState extends State<ListScreen> {
 
   final String postcode;
   final bool isSale;
-  bool mapViewButtonEnabled = false;
+  dynamic mapViewButtonEnabled;
   String topLevelUrl = "";
   int setupTokens = 0;
   Future<List<Listing>>? _futureListings;
@@ -73,17 +73,15 @@ class _ListScreenState extends State<ListScreen> {
         "https://www.rightmove.co.uk/$saleOrRentString/find.html?locationIdentifier=OUTCODE%5E$code&radius=${widget.filter.searchRadii[widget.filter.searchRadius]}&minPrice=${widget.filter.minPrices[widget.filter.minPrice]}&maxPrice=${widget.filter.maxPrices[widget.filter.maxPrice]}&minBedrooms=${widget.filter.minBedrooms[widget.filter.bedroomsMin]}&maxBedrooms=${widget.filter.maxBedrooms[widget.filter.bedroomsMax]}&propertyTypes=${widget.filter.propertyTypes[widget.filter.propertyType]}&numberOfPropertiesPerPage=24&sortType=6&radius=0.0&index=0&includeSSTC=false&viewType=LIST&channel=BUY&areaSizeUnit=sqft&currencyCode=GBP&isFetching=false&searchLocation=$outcode&useLocationIdentifier=true&previousSearchLocation=null";
     final urlsAndIds =
         (await getListOfUrlsAndIds(topLevelUrl)).toSet().toList();
-
+    if (urlsAndIds.isEmpty) return List.empty();
     ////////////////////////////////////////////////////////////////////////////
-    const howManyProperties = 20;
+    const howManyProperties = 6;
     ////////////////////////////////////////////////////////////////////////////
 
     String? areaSummary = await DatabaseService().getAreaSummary(outcode);
-    if (areaSummary == null) {
-      areaSummary = await sendGeminiText(chat,
-          "Tell me what I need to know about the $postcode UK postcode area if I am considering moving there");
-      DatabaseService().updateAreaSummary(outcode, areaSummary);
-    }
+    areaSummary ??= await sendGeminiText(chat,
+        "Tell me what I need to know about the $postcode UK postcode area if I am considering moving there. Also include crime level without providing the police link");
+    DatabaseService().updateAreaSummary(outcode, areaSummary);
 
     var rng = Random();
     for (int i = 0; i < min(howManyProperties, urlsAndIds[0].length); i++) {
@@ -123,43 +121,64 @@ class _ListScreenState extends State<ListScreen> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: SizedBox(
           width: 180,
-          child: FloatingActionButton(
-              shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(6.0), // Adjust the radius as needed
-              ),
-              backgroundColor: const Color.fromARGB(255, 9, 63, 66),
-              foregroundColor: Colors.white,
-              onPressed: () => mapViewButtonEnabled
-                  ? Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => MapView(listings, true)))
-                  : null,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset("assets/pin.png",
-                      color: Colors.white, height: 28),
-                  const SizedBox(
-                    width: 8,
+          child: listings.isEmpty
+              ? null
+              : FloatingActionButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                        6.0), // Adjust the radius as needed
                   ),
-                  const Text(
-                    "Map View",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-                  ),
-                ],
-              )),
+                  backgroundColor: const Color.fromARGB(255, 9, 63, 66),
+                  foregroundColor: Colors.white,
+                  onPressed: () => mapViewButtonEnabled
+                      ? Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MapView(listings, true)))
+                      : null,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset("assets/pin.png",
+                          color: Colors.white, height: 28),
+                      const SizedBox(
+                        width: 8,
+                      ),
+                      const Text(
+                        "Map View",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  )),
         ),
         body: FutureBuilder<List<Listing>>(
           future: _futureListings,
           builder: (context, snapshot) {
             if (snapshot.connectionState != ConnectionState.done) {
               mapViewButtonEnabled = false;
-              return const Center(
-                  child: CircularProgressIndicator(
-                color: Color.fromARGB(255, 9, 63, 66),
-              ));
+              return const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Text(
+                      "Loading properties...",
+                      style: TextStyle(
+                          fontFamily: "Nunito",
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Center(
+                      child: CircularProgressIndicator(
+                    color: Color.fromARGB(255, 9, 63, 66),
+                  )),
+                ],
+              );
             }
             if (snapshot.hasError) {
               return Text(
@@ -170,65 +189,110 @@ class _ListScreenState extends State<ListScreen> {
             mapViewButtonEnabled = true;
             return Column(
               children: [
-                // ListView with results
-                Expanded(
-                  // Ensures ListView takes only the remaining vertical space
-                  child: ListView.builder(
-                    itemCount: listings.length + 2,
-                    itemBuilder: (BuildContext context, int index) {
-                      if (index == 0) {
-                        return Padding(
-                          padding:
-                              const EdgeInsets.only(bottom: 6, top: 6, left: 8),
-                          child: Row(
-                            children: [
-                              Text(
-                                "${listings.length} results",
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(width: 250),
-                              GestureDetector(
-                                child: const Icon(
-                                  Icons.sort,
-                                  size: 24,
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    // Sort listings by rating in descending order
-                                    listings.sort(
-                                        (a, b) => b.rating.compareTo(a.rating));
-                                  });
-                                },
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-
-                      if (index > 0 && index < listings.length + 1) {
-                        final listing = listings[index - 1];
-                        return Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: GestureDetector(
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ListingScreen(listing),
-                              ),
+                if (listings.isEmpty)
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const SizedBox(
+                        height: 40,
+                      ),
+                      const Text(
+                        "No Results!",
+                        style: TextStyle(
+                            fontSize: 25, fontWeight: FontWeight.w600),
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      Center(
+                        child: Image.asset(
+                          "assets/sad.png",
+                          width: 150,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      SizedBox(
+                        width: 150,
+                        child: FloatingActionButton(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  6.0), // Adjust the radius as needed
                             ),
-                            child: buildCard(listing),
-                          ),
-                        );
-                      }
-                      // Space at the end to not hide behind the Map View button
-                      if (index == listings.length + 1) {
-                        return const SizedBox(height: 80);
-                      }
-                      return null;
-                    },
+                            backgroundColor:
+                                const Color.fromARGB(255, 9, 63, 66),
+                            foregroundColor: Colors.white,
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text(
+                              "Refine Search",
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.w600),
+                            )),
+                      ),
+                    ],
                   ),
-                ),
+                // ListView with results
+                if (listings.isNotEmpty)
+                  Expanded(
+                    flex: 3,
+                    child: ListView.builder(
+                      itemCount: listings.length + 2,
+                      itemBuilder: (BuildContext context, int index) {
+                        if (index == 0) {
+                          return Padding(
+                            padding: const EdgeInsets.only(
+                                bottom: 6, top: 6, left: 8),
+                            child: Row(
+                              children: [
+                                Text(
+                                  "${listings.length} results",
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(width: 250),
+                                GestureDetector(
+                                  child: const Icon(
+                                    Icons.sort,
+                                    size: 24,
+                                  ),
+                                  onTap: () {
+                                    setState(() {
+                                      // Sort listings by rating in descending order
+                                      listings.sort((a, b) =>
+                                          b.rating.compareTo(a.rating));
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+
+                        if (index > 0 && index < listings.length + 1) {
+                          final listing = listings[index - 1];
+                          return Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: GestureDetector(
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ListingScreen(listing),
+                                ),
+                              ),
+                              child: buildCard(listing),
+                            ),
+                          );
+                        }
+                        // Space at the end to not hide behind the Map View button
+                        if (index == listings.length + 1) {
+                          return const SizedBox(height: 80);
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
               ],
             );
           },
@@ -290,11 +354,6 @@ Widget buildCard(Listing listing) {
                         children: [
                           Image(
                             image: AssetImage("assets/black.png"),
-                            // image: listing.rating > 4
-                            //     ? const AssetImage("assets/gold.png")
-                            //     : listing.rating > 3
-                            //         ? const AssetImage("assets/silver.png")
-                            //         : const AssetImage("assets/bronze.png"),
                             height: 16,
                             width: 16,
                           ),
@@ -303,20 +362,20 @@ Widget buildCard(Listing listing) {
                           ),
                         ],
                       ),
-                    // if (listing.rating - listing.rating.floor() > 0)
-                    //   const Image(
-                    //     image: AssetImage("assets/half_star.png"),
-                    //     height: 18,
-                    //     width: 18,
-                    //   ),
+                    if (listing.rating - listing.rating.floor() > 0)
+                      const Image(
+                        image: AssetImage("assets/half_star.png"),
+                        height: 18,
+                        width: 18,
+                      ),
                     const SizedBox(
                       width: 8,
                     ),
-                    // SizedBox(
-                    //     height: 20,
-                    //     child: listing.fromFirebase
-                    //         ? Image.asset("assets/firebase.png")
-                    //         : Image.asset("assets/gemini.png")),
+                    SizedBox(
+                        height: 20,
+                        child: listing.fromFirebase
+                            ? Image.asset("assets/firebase.png")
+                            : Image.asset("assets/gemini.png")),
                     // Container(
                     //   width: 27.0,
                     //   height: 27.0,

@@ -55,6 +55,10 @@ Future<Map<String, dynamic>> scrapeRightmoveProperty(String url) async {
     property['floorplanPath'] =
         inferFloorplanUrlFromThumnailUrk(floorPlanThumbnailUrl);
 
+    // These two seem to be from dynamically generated JS...
+    // var nearestStation = document.querySelectorAll('.cGDiWU3FlTjqSs-F1LwK4');
+    // var nearestStationDistance = document.querySelectorAll('._1ZY603T1ryTT3dMgGkM7Lg');
+
     String? getPropertyData(String labelText) {
       // Find the label element by its text
       final labelElement = document

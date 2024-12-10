@@ -90,7 +90,7 @@ Future<ChatSession> startGeminiChat(GenerativeModel model) async {
 Future<int> setupGeminiChat(ChatSession chat, GenerativeModel model) async {
   String setup =
       r'''I will provide you with multiple Property Listing descriptions, images and floorplans. Create an objective set of
-        of positive bullet points and negative bullet points and gold star bullet point rating out of 5 for different 
+        of positive bullet points and negative bullet points and star bullet point rating out of 5 for different 
         aspects. Don't mention lease tenure. For a 1 bedroom flat a good size is 480-600sqft, for a 2 bedroom flat a good 
         size is 700-915sqft and for a 3 bedroom flat a good size is 915-1184sqft, 
         Output should be a single JSON with three fields like this:

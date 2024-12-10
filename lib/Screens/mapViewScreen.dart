@@ -97,8 +97,11 @@ class _MapViewState extends State<MapView> {
                 children: [
                   Center(
                     child: Text(
-                      "Loading Map...",
-                      style: TextStyle(fontFamily: "Nunito"),
+                      "Loading map...",
+                      style: TextStyle(
+                          fontFamily: "Nunito",
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600),
                     ),
                   ),
                   SizedBox(

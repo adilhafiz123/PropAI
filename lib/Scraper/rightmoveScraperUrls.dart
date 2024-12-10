@@ -29,7 +29,8 @@ Future<List<List<String>>> getListOfUrlsAndIds(String topLevelUrl) async {
     // Extract the href attribute and prepend the base URL
     String baseUrl = "https://www.rightmove.co.uk";
     List<String> urls = linkElements
-        .map((element) => element.attributes['href'] != null
+        .map((element) => ((element.attributes['href'] != null) &&
+                (element.attributes['href'] != ""))
             ? '$baseUrl${element.attributes['href']}'
             : null)
         .where((url) => url != null) // Remove nulls
@@ -37,18 +38,21 @@ Future<List<List<String>>> getListOfUrlsAndIds(String topLevelUrl) async {
         .toSet()
         .toList();
 
-    var ids = urls.map(
-      (url) {
-        final uri = Uri.parse(url);
-        final pathSegments = uri.pathSegments;
+    var ids = urls
+        .map(
+          (url) {
+            final uri = Uri.parse(url);
+            final pathSegments = uri.pathSegments;
 
-        if (pathSegments.isEmpty) {
-          throw "No ID found for URL: $url";
-        }
-        // The ID is usually the last segment (assuming rightmove follows this format)
-        return pathSegments.last;
-      },
-    ).toList();
+            if (pathSegments.isEmpty) {
+              throw "No ID found for URL: $url";
+            }
+            // The ID is usually the last segment (assuming rightmove follows this format)
+            return pathSegments.last;
+          },
+        )
+        .where((url) => url != null)
+        .toList();
 
     return [urls, ids];
   }

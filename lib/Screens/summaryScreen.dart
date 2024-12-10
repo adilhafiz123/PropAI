@@ -156,7 +156,7 @@ class _ListingScreenState extends State<ListingScreen> {
                   children: [
                     const SizedBox(width: 15),
                     SizedBox(
-                      width: 155,
+                      width: 150,
                       child: Row(
                         children: [
                           const Image(
@@ -226,7 +226,7 @@ class _ListingScreenState extends State<ListingScreen> {
                       child: Row(
                         children: [
                           const SizedBox(width: 15),
-                          for (int i = 0; i < widget.listing.rating; i++)
+                          for (int i = 1; i < widget.listing.rating; i++)
                             const Row(
                               children: [
                                 Image(
@@ -238,15 +238,23 @@ class _ListingScreenState extends State<ListingScreen> {
                                   width: 3,
                                 ),
                               ],
-                            )
+                            ),
+                          if (widget.listing.rating -
+                                  widget.listing.rating.floor() >
+                              0)
+                            const Image(
+                              image: AssetImage("assets/half_star.png"),
+                              height: 22,
+                              width: 22,
+                            ),
                         ],
                       ),
                     ),
                     const SizedBox(
-                      width: 40,
+                      width: 35,
                     ),
                     SizedBox(
-                      width: 155,
+                      width: 160,
                       child: OutlinedButton(
                         style: OutlinedButton.styleFrom(
                           shape: RoundedRectangleBorder(
@@ -319,6 +327,25 @@ class _ListingScreenState extends State<ListingScreen> {
                                   fontFamily: "Nunito",
                                   fontWeight: FontWeight.w900))))),
                 ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    const SizedBox(width: 60),
+                    SizedBox(height: 20, child: Image.asset("assets/dlr.png")),
+                    const SizedBox(width: 10),
+                    const Text("South Quay DLR (0.1 miles)"),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    const SizedBox(width: 60),
+                    SizedBox(height: 20, child: Image.asset("assets/tube.png")),
+                    const SizedBox(width: 10),
+                    const Text("Canary Wharf (0.4 miles)"),
+                  ],
+                ),
+                const SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ClipRRect(
@@ -338,9 +365,11 @@ class _ListingScreenState extends State<ListingScreen> {
                                     children: [
                                       Center(
                                         child: Text(
-                                          "Loading Map...",
-                                          style:
-                                              TextStyle(fontFamily: "Nunito"),
+                                          "Loading map...",
+                                          style: TextStyle(
+                                              fontFamily: "Nunito",
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600),
                                         ),
                                       ),
                                       SizedBox(
@@ -430,6 +459,24 @@ class _ListingScreenState extends State<ListingScreen> {
                             ));
                   },
                 ),
+                OutlinedButton(
+                    child: Wrap(
+                      alignment: WrapAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: 25,
+                          child: Image.asset(
+                            "assets/school.png",
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        const Text("Schools",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w600)),
+                      ],
+                    ),
+                    onPressed: () => ()),
+
                 OutlinedButton(
                     child: Row(
                       children: [
