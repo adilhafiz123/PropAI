@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:my_flutter_application/Screens/imageViewerScreen.dart';
 
-Widget buildImageWidget(String filename, bool onTouch, BuildContext context,
-    List<String> imagePaths) {
+Widget buildImageWidget(String filename, bool onTouch, BoxFit boxfit,
+    BuildContext context, List<String> imagePaths) {
   return GestureDetector(
     onTap: () => !onTouch
         ? null
@@ -14,7 +14,10 @@ Widget buildImageWidget(String filename, bool onTouch, BuildContext context,
     child: ClipRRect(
         borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-        child: SizedBox(width: 352, child: Image.network(filename))),
+        child: FittedBox(
+            fit: boxfit,
+            clipBehavior: Clip.hardEdge,
+            child: SizedBox(width: 352, child: Image.network(filename)))),
   );
 }
 

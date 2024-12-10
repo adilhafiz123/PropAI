@@ -105,6 +105,7 @@ class _ListingScreenState extends State<ListingScreen> {
                               return buildImageWidget(
                                 widget.listing.imagePaths[index],
                                 true,
+                                BoxFit.cover,
                                 context,
                                 widget.listing.imagePaths,
                               );
@@ -120,9 +121,11 @@ class _ListingScreenState extends State<ListingScreen> {
                               activeIndex: yourActiveIndex,
                               count: widget.listing.imagePaths.length,
                               effect: const WormEffect(
-                                dotHeight: 10,
-                                dotWidth: 10,
+                                dotHeight: 9,
+                                dotWidth: 9,
                                 paintStyle: PaintingStyle.stroke,
+                                dotColor: Colors.white,
+                                strokeWidth: 1,
                                 activeDotColor: Color.fromARGB(255, 14, 40, 60),
                               ),
                             ),
@@ -589,8 +592,12 @@ class _ListingScreenState extends State<ListingScreen> {
                                 for (int i = 0;
                                     i < widget.listing.imagePaths.length;
                                     i++)
-                                  buildImageWidget(widget.listing.imagePaths[i],
-                                      true, context, widget.listing.imagePaths),
+                                  buildImageWidget(
+                                      widget.listing.imagePaths[i],
+                                      true,
+                                      BoxFit.cover,
+                                      context,
+                                      widget.listing.imagePaths),
                               ],
                             )),
                         Align(

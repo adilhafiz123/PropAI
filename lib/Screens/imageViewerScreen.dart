@@ -14,8 +14,8 @@ class ImageViewerScreen extends StatelessWidget {
       children: [
         for (int i = 0; i < imagePaths.length; i++)
           InteractiveViewer(
-              child: buildImageWidget(
-                  imagePaths[i], false, context, List.empty())),
+              child: buildImageWidget(imagePaths[i], false, BoxFit.scaleDown,
+                  context, List.empty())),
       ],
     );
   }
