@@ -121,42 +121,39 @@ class _ListScreenState extends State<ListScreen> {
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: SizedBox(
           width: 180,
-          child: listings.isEmpty
-              ? null
-              : FloatingActionButton(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                        6.0), // Adjust the radius as needed
+          child: FloatingActionButton(
+              elevation: 10,
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.circular(30.0), // Adjust the radius as needed
+              ),
+              backgroundColor: const Color.fromARGB(255, 60, 120, 140),
+              foregroundColor: Colors.white,
+              onPressed: () => mapViewButtonEnabled
+                  ? Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => MapView(listings, true)))
+                  : null,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset("assets/pin.png",
+                      color: Colors.white, height: 28),
+                  const SizedBox(
+                    width: 8,
                   ),
-                  backgroundColor: const Color.fromARGB(255, 9, 63, 66),
-                  foregroundColor: Colors.white,
-                  onPressed: () => mapViewButtonEnabled
-                      ? Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MapView(listings, true)))
-                      : null,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset("assets/pin.png",
-                          color: Colors.white, height: 28),
-                      const SizedBox(
-                        width: 8,
-                      ),
-                      const Text(
-                        "Map View",
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w600),
-                      ),
-                    ],
-                  )),
+                  const Text(
+                    "Map View",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                  ),
+                ],
+              )),
         ),
         body: FutureBuilder<List<Listing>>(
           future: _futureListings,
           builder: (context, snapshot) {
             if (snapshot.connectionState != ConnectionState.done) {
-              mapViewButtonEnabled = false;
               return const Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -187,6 +184,7 @@ class _ListScreenState extends State<ListScreen> {
 
             listings = snapshot.data!;
             mapViewButtonEnabled = true;
+
             return Column(
               children: [
                 if (listings.isEmpty)
@@ -222,7 +220,7 @@ class _ListScreenState extends State<ListScreen> {
                                   6.0), // Adjust the radius as needed
                             ),
                             backgroundColor:
-                                const Color.fromARGB(255, 9, 63, 66),
+                                const Color.fromARGB(255, 60, 120, 140),
                             foregroundColor: Colors.white,
                             onPressed: () => Navigator.pop(context),
                             child: const Text(
@@ -417,7 +415,7 @@ Widget buildCard(Listing listing) {
                   ],
                 ),
                 const SizedBox(
-                  height: 8,
+                  height: 10,
                 ),
                 SizedBox(
                   width: 155,
@@ -428,16 +426,16 @@ Widget buildCard(Listing listing) {
                   ),
                 ),
                 SizedBox(width: 140, height: 65, child: Text(listing.address)),
-                const SizedBox(height: 8),
+                const SizedBox(height: 6),
                 Row(
                   children: [
-                    const SizedBox(width: 10),
-                    SizedBox(width: 20, child: Image.asset("assets/send.png")),
-                    const SizedBox(width: 30),
-                    SizedBox(
-                        width: 20, child: Image.asset("assets/telephone.png")),
-                    const SizedBox(width: 30),
-                    SizedBox(width: 20, child: Image.asset("assets/heart.png")),
+                    const SizedBox(width: 20),
+                    SizedBox(width: 21, child: Image.asset("assets/share.png")),
+                    const SizedBox(width: 55),
+                    // SizedBox(
+                    //     width: 20, child: Image.asset("assets/telephone.png")),
+                    // const SizedBox(width: 30),
+                    SizedBox(width: 22, child: Image.asset("assets/heart.png")),
                   ],
                 ),
               ],

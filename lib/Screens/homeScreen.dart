@@ -64,15 +64,16 @@ class _HomeState extends State<Home> {
         backgroundColor: const Color.fromARGB(255, 14, 40, 60),
       ),
       body: Column(children: [
+        const SizedBox(height: 20),
         const Center(
             child: Text("Enter Postcode",
                 style: TextStyle(
-                    color: Color.fromARGB(255, 14, 60, 40),
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: "Lato"))),
+                  color: Color.fromARGB(255, 14, 60, 40),
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                ))),
         Padding(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(10),
           child: TextField(
               controller: myController,
               style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
@@ -88,9 +89,10 @@ class _HomeState extends State<Home> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: FloatingActionButton(
+                  elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(
-                        6.0), // Adjust the radius as needed
+                        30.0), // Adjust the radius as needed
                   ),
                   onPressed: () {
                     Navigator.push(
@@ -100,7 +102,7 @@ class _HomeState extends State<Home> {
                               ListScreen(true, myController.text, filter)),
                     );
                   },
-                  backgroundColor: const Color.fromARGB(255, 9, 63, 66),
+                  backgroundColor: const Color.fromARGB(255, 60, 120, 140),
                   child: const Text(
                     "For Sale",
                     style: TextStyle(
@@ -115,9 +117,10 @@ class _HomeState extends State<Home> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: FloatingActionButton(
+                  elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(
-                        6.0), // Adjust the radius as needed
+                        30.0), // Adjust the radius as needed
                   ),
                   onPressed: () {
                     Navigator.push(
@@ -127,7 +130,7 @@ class _HomeState extends State<Home> {
                               ListScreen(false, myController.text, filter)),
                     );
                   },
-                  backgroundColor: const Color.fromARGB(255, 9, 63, 66),
+                  backgroundColor: const Color.fromARGB(255, 60, 120, 140),
                   child: const Text(
                     "To Rent",
                     style: TextStyle(
@@ -150,7 +153,8 @@ class _HomeState extends State<Home> {
               const Row(children: [
                 SizedBox(width: 10),
                 Text("Search radius",
-                    style: TextStyle(color: Color.fromARGB(255, 87, 87, 87)))
+                    style: TextStyle(
+                        fontSize: 15, color: Color.fromARGB(255, 87, 87, 87)))
               ]),
               SizedBox(
                 height: 60,
@@ -176,7 +180,8 @@ class _HomeState extends State<Home> {
               const Row(children: [
                 SizedBox(width: 10),
                 Text("Bedrooms",
-                    style: TextStyle(color: Color.fromARGB(255, 87, 87, 87)))
+                    style: TextStyle(
+                        fontSize: 15, color: Color.fromARGB(255, 87, 87, 87)))
               ]),
               Row(
                 children: [
@@ -229,7 +234,8 @@ class _HomeState extends State<Home> {
               const Row(children: [
                 SizedBox(width: 10),
                 Text("Price range",
-                    style: TextStyle(color: Color.fromARGB(255, 87, 87, 87)))
+                    style: TextStyle(
+                        fontSize: 15, color: Color.fromARGB(255, 87, 87, 87)))
               ]),
               Row(
                 children: [
@@ -334,7 +340,8 @@ class _HomeState extends State<Home> {
               const Row(children: [
                 SizedBox(width: 10),
                 Text("Property Type",
-                    style: TextStyle(color: Color.fromARGB(255, 87, 87, 87)))
+                    style: TextStyle(
+                        fontSize: 15, color: Color.fromARGB(255, 87, 87, 87)))
               ]),
               Row(
                 children: [

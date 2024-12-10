@@ -38,21 +38,18 @@ Future<List<List<String>>> getListOfUrlsAndIds(String topLevelUrl) async {
         .toSet()
         .toList();
 
-    var ids = urls
-        .map(
-          (url) {
-            final uri = Uri.parse(url);
-            final pathSegments = uri.pathSegments;
+    var ids = urls.map(
+      (url) {
+        final uri = Uri.parse(url);
+        final pathSegments = uri.pathSegments;
 
-            if (pathSegments.isEmpty) {
-              throw "No ID found for URL: $url";
-            }
-            // The ID is usually the last segment (assuming rightmove follows this format)
-            return pathSegments.last;
-          },
-        )
-        .where((url) => url != null)
-        .toList();
+        if (pathSegments.isEmpty) {
+          throw "No ID found for URL: $url";
+        }
+        // The ID is usually the last segment (assuming rightmove follows this format)
+        return pathSegments.last;
+      },
+    ).toList();
 
     return [urls, ids];
   }
