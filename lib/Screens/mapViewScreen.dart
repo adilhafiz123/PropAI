@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -19,7 +21,7 @@ class MapView extends StatefulWidget {
 class _MapViewState extends State<MapView> {
   late GoogleMapController mapController;
 
-  late Listing selectedListing;
+  late (Listing, Location?) selectedListing;
   List<Future<List<Location>>> futureLocationsList = List.empty(growable: true);
   List<Future<Uint8List>> futureImages = List.empty(growable: true);
 
@@ -29,14 +31,14 @@ class _MapViewState extends State<MapView> {
       futureLocationsList.add(
           locationFromAddress("${widget.listings[i].address}, United Kingdom"));
     }
-    selectedListing = widget.listings[0];
+    selectedListing = (widget.listings[0], null);
 
-    futureImages.add(getBytesFromAsset2("assets/pin_black.png"));
-    futureImages.add(getBytesFromAsset2("assets/pin_green.png"));
-    futureImages.add(getBytesFromAsset2("assets/pin_amber_green.png"));
-    futureImages.add(getBytesFromAsset2("assets/pin_amber.png"));
-    futureImages.add(getBytesFromAsset2("assets/pin_amber_red.png"));
-    futureImages.add(getBytesFromAsset2("assets/pin_red.png"));
+    futureImages.add(getBytesFromAsset2("assets/pin_black.png", 40));
+    futureImages.add(getBytesFromAsset2("assets/pin_green.png", 40));
+    futureImages.add(getBytesFromAsset2("assets/pin_amber_green.png", 40));
+    futureImages.add(getBytesFromAsset2("assets/pin_amber.png", 40));
+    futureImages.add(getBytesFromAsset2("assets/pin_amber_red.png", 40));
+    futureImages.add(getBytesFromAsset2("assets/pin_red.png", 40));
 
     super.initState();
   }
@@ -45,10 +47,16 @@ class _MapViewState extends State<MapView> {
     mapController = controller;
   }
 
-  Future<Uint8List> getBytesFromAsset2(path) async {
-    final ByteData bytes = await rootBundle.load(path);
-    final Uint8List uint8Bytes = bytes.buffer.asUint8List();
-    return uint8Bytes;
+  Future<Uint8List> getBytesFromAsset2(String path, int width) async {
+    ByteData data = await rootBundle.load(path);
+    Codec codec = await instantiateImageCodec(
+      data.buffer.asUint8List(),
+      targetWidth: width,
+    );
+    FrameInfo fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ImageByteFormat.png))!
+        .buffer
+        .asUint8List();
   }
 
   @override
@@ -69,7 +77,12 @@ class _MapViewState extends State<MapView> {
         child: (!widget.showListViewButton)
             ? null
             : FloatingActionButton(
-                backgroundColor: const Color.fromARGB(255, 9, 63, 66),
+                elevation: 10,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                      30.0), // Adjust the radius as needed
+                ),
+                backgroundColor: const Color.fromARGB(255, 60, 120, 140),
                 foregroundColor: Colors.white,
                 onPressed: () => Navigator.pop(context),
                 child: const Row(
@@ -143,23 +156,24 @@ class _MapViewState extends State<MapView> {
                 final markers = <Marker>{};
                 for (int i = 0; i < locations.length; i++) {
                   markers.add(Marker(
-                    markerId: MarkerId(widget.listings[i].id),
-                    icon: widget.listings[i] == selectedListing
-                        ? blackBitmapDiscriptor
-                        : widget.listings[i].rating > 4
-                            ? greenBitmapDiscriptor
-                            : widget.listings[i].rating > 3
-                                ? amberGreenBitmapDiscriptor
-                                : widget.listings[i].rating > 2
-                                    ? amberBitmapDiscriptor
-                                    : widget.listings[i].rating > 1
-                                        ? amberRedBitmapDiscriptor
-                                        : redBitmapDiscriptor,
-                    position: LatLng(
-                        locations[i][0].latitude, locations[i][0].longitude),
-                    onTap: () =>
-                        setState(() => selectedListing = widget.listings[i]),
-                  ));
+                      markerId: MarkerId(widget.listings[i].id),
+                      icon: widget.listings[i] == selectedListing
+                          ? blackBitmapDiscriptor
+                          : widget.listings[i].rating > 4
+                              ? greenBitmapDiscriptor
+                              : widget.listings[i].rating > 3
+                                  ? amberGreenBitmapDiscriptor
+                                  : widget.listings[i].rating > 2
+                                      ? amberBitmapDiscriptor
+                                      : widget.listings[i].rating > 1
+                                          ? amberRedBitmapDiscriptor
+                                          : redBitmapDiscriptor,
+                      position: LatLng(
+                          locations[i][0].latitude, locations[i][0].longitude),
+                      onTap: () {
+                        setState(() => selectedListing =
+                            (widget.listings[i], locations[i][0]));
+                      }));
                 }
 
                 double averageLat = 0.0;
@@ -179,7 +193,10 @@ class _MapViewState extends State<MapView> {
                     onMapCreated: _onMapCreated,
                     zoomControlsEnabled: false,
                     initialCameraPosition: CameraPosition(
-                      target: approximateCenter,
+                      target: selectedListing.$2 == null
+                          ? approximateCenter
+                          : LatLng(selectedListing.$2!.latitude,
+                              selectedListing.$2!.longitude),
                       zoom: 14.0,
                     ),
                     markers: markers,
@@ -187,12 +204,12 @@ class _MapViewState extends State<MapView> {
                   Align(
                       alignment: const Alignment(0.5, 0.7),
                       child: GestureDetector(
-                        child: buildCard(selectedListing),
+                        child: buildCard(selectedListing.$1),
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  ListingScreen(selectedListing)),
+                                  ListingScreen(selectedListing.$1)),
                         ),
                       )),
                 ]);
