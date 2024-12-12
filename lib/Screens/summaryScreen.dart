@@ -285,7 +285,7 @@ class _ListingScreenState extends State<ListingScreen> {
                           width: 35,
                         ),
                         SizedBox(
-                          width: 160,
+                          width: 150,
                           child: OutlinedButton(
                             style: OutlinedButton.styleFrom(
                               shape: RoundedRectangleBorder(

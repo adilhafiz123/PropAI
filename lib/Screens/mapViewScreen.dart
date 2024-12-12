@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:my_flutter_application/Screens/listViewScreen.dart';
+import 'package:my_flutter_application/Classes/ListViewCard.dart';
 import 'package:my_flutter_application/Classes/ListingClass.dart';
 import 'package:my_flutter_application/Screens/summaryScreen.dart';
 
@@ -33,7 +33,7 @@ class _MapViewState extends State<MapView> {
     }
     selectedListing = (widget.listings[0], null);
 
-    futureImages.add(getBytesFromAsset2("assets/pin_black.png", 40));
+    futureImages.add(getBytesFromAsset2("assets/pin_black.png", 100));
     futureImages.add(getBytesFromAsset2("assets/pin_green.png", 40));
     futureImages.add(getBytesFromAsset2("assets/pin_amber_green.png", 40));
     futureImages.add(getBytesFromAsset2("assets/pin_amber.png", 40));
@@ -157,7 +157,7 @@ class _MapViewState extends State<MapView> {
                 for (int i = 0; i < locations.length; i++) {
                   markers.add(Marker(
                       markerId: MarkerId(widget.listings[i].id),
-                      icon: widget.listings[i] == selectedListing
+                      icon: widget.listings[i] == selectedListing.$1
                           ? blackBitmapDiscriptor
                           : widget.listings[i].rating > 4
                               ? greenBitmapDiscriptor
@@ -204,7 +204,7 @@ class _MapViewState extends State<MapView> {
                   Align(
                       alignment: const Alignment(0.5, 0.7),
                       child: GestureDetector(
-                        child: buildCard(selectedListing.$1),
+                        child: ListViewCard(listing: selectedListing.$1),
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
