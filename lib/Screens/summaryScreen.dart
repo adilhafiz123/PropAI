@@ -9,16 +9,16 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:my_flutter_application/Classes/ListingClass.dart';
 
-class ListingScreen extends StatefulWidget {
-  const ListingScreen(this.listing, {super.key});
+class SummaryScreen extends StatefulWidget {
+  const SummaryScreen(this.listing, {super.key});
 
   final Listing listing;
 
   @override
-  State<ListingScreen> createState() => _ListingScreenState();
+  State<SummaryScreen> createState() => SummaryScreenState();
 }
 
-class _ListingScreenState extends State<ListingScreen> {
+class SummaryScreenState extends State<SummaryScreen> {
   final List<File> _images = [];
   int yourActiveIndex = 0;
   final PageController pageControllerImages = PageController();

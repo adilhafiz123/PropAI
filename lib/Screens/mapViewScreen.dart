@@ -209,7 +209,7 @@ class _MapViewState extends State<MapView> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  ListingScreen(selectedListing.$1)),
+                                  SummaryScreen(selectedListing.$1)),
                         ),
                       )),
                 ]);

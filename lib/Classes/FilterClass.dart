@@ -6,6 +6,8 @@ class Filter {
   String bathroomsMax;
   String minPrice;
   String maxPrice;
+  String minRent;
+  String maxRent;
   String propertyType;
 
   Filter({
@@ -16,6 +18,8 @@ class Filter {
     this.bathroomsMax = "No max",
     this.minPrice = "No min",
     this.maxPrice = "£600,000",
+    this.minRent = "No min",
+    this.maxRent = "No max",
     this.propertyType = "Any",
   });
 
@@ -58,6 +62,34 @@ class Filter {
     "£5,000,000": "5000000",
     "£10,000,000": "10000000",
     "£15,000,000": "15000000",
+  };
+  Map<String, String> minRents = {
+    "No min": "0",
+    "£100 PCM": "100",
+    "£200 PCM": "200",
+    "£500 PCM": "500",
+    "£750 PCM": "750",
+    "£1,000 PCM": "1000",
+    "£1,250 PCM ": "1250",
+    "£1,500 PCM": "1500",
+    "£1,750 PCM": "1750",
+    "£2,000 PCM": "2000",
+    "£2,500 PCM": "2500",
+    "£3,000 PCM": "3000",
+  };
+  Map<String, String> maxRents = {
+    "No max": "0",
+    "£100 PCM": "100",
+    "£200 PCM": "200",
+    "£500 PCM": "500",
+    "£750 PCM": "750",
+    "£1,000 PCM": "1000",
+    "£1,250 PCM ": "1250",
+    "£1,500 PCM": "1500",
+    "£1,750 PCM": "1750",
+    "£2,000 PCM": "2000",
+    "£2,500 PCM": "2500",
+    "£3,000 PCM": "3000",
   };
   Map<String, String> minBedrooms = {
     "No min": "0",

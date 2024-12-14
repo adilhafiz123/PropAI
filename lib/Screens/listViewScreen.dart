@@ -14,19 +14,19 @@ import 'package:my_flutter_application/Classes/ListingClass.dart';
 import 'package:my_flutter_application/helperFunctions.dart';
 import "summaryScreen.dart";
 
-class ListScreen extends StatefulWidget {
-  const ListScreen(this.isSale, this.postcode, this.filter, {super.key});
+class ListViewScreen extends StatefulWidget {
+  const ListViewScreen(this.isSale, this.postcode, this.filter, {super.key});
 
   final bool isSale;
   final String postcode;
   final Filter filter;
 
   @override
-  State<ListScreen> createState() => _ListScreenState(isSale, postcode);
+  State<ListViewScreen> createState() => ListViewScreenState(isSale, postcode);
 }
 
-class _ListScreenState extends State<ListScreen> {
-  _ListScreenState(this.isSale, this.postcode);
+class ListViewScreenState extends State<ListViewScreen> {
+  ListViewScreenState(this.isSale, this.postcode);
 
   final String postcode;
   final bool isSale;
@@ -277,7 +277,7 @@ class _ListScreenState extends State<ListScreen> {
                               onTap: () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => ListingScreen(listing),
+                                  builder: (context) => SummaryScreen(listing),
                                 ),
                               ),
                               child: ListViewCard(
