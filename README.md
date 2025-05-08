@@ -1,7 +1,7 @@
 <h1 align="center">
   <img src="assets/logo.jpg" alt="Logo" width="120"/>
   <br/>
-  <span style="color:#1A936F">Sheikh&nbsp;AI</span>
+  <span style="color:#1A936F">Prop&nbsp;AI</span>
 </h1>
 
 <p align="center">
