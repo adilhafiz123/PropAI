@@ -1,16 +1,56 @@
-# my_flutter_application
+<h1 align="center">
+  <img src="assets/logo.jpg" alt="Logo" width="120"/>
+  <br/>
+  <span style="color:#1A936F">Sheikh&nbsp;AI</span>
+</h1>
 
-A new Flutter project.
+<p align="center">
+  <i>Your AI Property Portal</i>
+</p>
 
-## Getting Started
+<p align="center">
+  <a href="https://sheikh-ai.com" target="_blank"><img src="https://img.shields.io/badge/live-website-1A936F?style=for-the-badge"></a>
+</p>
 
-This project is a starting point for a Flutter application.
+---
+✨ Key Features
 
-A few resources to get you started if this is your first Flutter project:
+AI property matchmaker – conversational recommendations powered by Gemini via the google_generative_ai Dart SDK
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Interactive maps – pinpoint listings on Google Maps with clustering & custom pins
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Smart filters – surface homes by budget, location, number of rooms, amenities & more
+
+Instant insights – on‑the‑fly valuation, rental yield & neighbourhood stats generated with AI
+
+Cross‑platform – one Flutter code‑base targeting iOS, Android, Web, macOS, Windows & Linux
+
+> _Click to watch the full walkthrough_
+<p align="center">
+  <video width="640" controls>
+    <source src="docs/demo.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+</p>
+
+
+
+🧩 Project Structure
+
+lib/
+├── Screens/        # Pages & flows
+├── Widgets/        # Reusable UI pieces
+├── Services/
+│   ├── ai_service.dart
+│   ├── map_service.dart
+│   └── firestore_service.dart
+└── main.dart       # Entry point
+assets/             # Images & Lottie
+firebase/           # Firestore rules & indexes
+
+
+
+📝 License
+
+Distributed under the MIT License. See LICENSE for details.
+
