@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="assets/logo.jpg" alt="Logo" width="120"/>
+  <img src="assets/wizard.png" alt="Logo" width="120"/>
   <br/>
   <span style="color:#1A936F">Prop&nbsp;AI</span>
 </h1>
@@ -25,13 +25,13 @@ Instant insights – on‑the‑fly valuation, rental yield & neighbourhood sta
 
 Cross‑platform – one Flutter code‑base targeting iOS, Android, Web, macOS, Windows & Linux
 
-> _Click to watch the full walkthrough_
-<p align="center">
-  <video width="640" controls>
-    <source src="docs/demo.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
-</p>
+<p align="center"> 
+  <img src="docs/nlp_search.jpg" width="400" alt="NLP Search">
+  <img src="docs/search.jpg" width="400" alt="Refined Search"> 
+  <img src="docs/results.jpg" width="400" alt="Search Results">
+  <img src="docs/summary_1.jpg" width="400" alt="AI Summary 1"> 
+  <img src="docs/summary_2.jpg" width="400" alt="AI Summary 2"> </p>
+From AI chat to search results and insights – PropAI in action
 
 
 
