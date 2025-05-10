@@ -8,9 +8,6 @@
   <i>Your AI Property Portal</i>
 </p>
 
-<p align="center">
-  <a href="https://sheikh-ai.com" target="_blank"><img src="https://img.shields.io/badge/live-website-1A936F?style=for-the-badge"></a>
-</p>
 
 ---
 ✨ Key Features
