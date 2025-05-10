@@ -32,18 +32,19 @@ From AI chat to search results and insights – PropAI in action
 
 
 
-🧩 Project Structure
-
-lib/
-├── Screens/        # Pages & flows
-├── Widgets/        # Reusable UI pieces
-├── Services/
-│   ├── ai_service.dart
-│   ├── map_service.dart
-│   └── firestore_service.dart
-└── main.dart       # Entry point
-assets/             # Images & Lottie
-firebase/           # Firestore rules & indexes
+🧩 Project Structure <br>
+<br>
+lib/ <br>
+├── Screens/              # Pages & flows <br>
+├── Widgets/              # Reusable UI pieces <br>
+├── Services/ <br>
+│   ├── ai_service.dart <br>
+│   ├── map_service.dart <br>
+│   └── firestore_service.dart <br>
+└── main.dart             # Entry point <br>
+<br>
+assets/                   # Images & Lottie <br>
+firebase/                 # Firestore rules & indexes <br>
 
 
 
